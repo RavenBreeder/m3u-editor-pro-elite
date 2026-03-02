@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="M3U Editor Pro Elite: La herramienta definitiva para gestionar, limpiar y verificar listas IPTV. Organiza canales, elimina duplicados y testea enlaces online/offline gratis.">
+	<meta name="keywords" content="m3u editor, iptv playlist editor, editar lista m3u, limpiar m3u, verificar links iptv, iptv online tester, m3u8 editor, organizar canales iptv, raven breeder, elite stream technology">
+	<meta property="og:title" content="M3U Editor Pro Elite">
+	<meta property="og:description" content="Gestiona y optimiza tus listas IPTV de forma profesional. Rápido, potente y gratuito.">
+	<meta property="og:type" content="website">
+	<meta name="author" content="Raven Breeder">    
+	<link rel="icon" type="image/x-icon" href="img/favicon.ico">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>M3U Editor Pro Elite</title>
+<style>
+		:root { --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; --primary: #bb86fc; --secondary: #03dac6; --error: #cf6679; --border: #333; --success: #4caf50; --warning: #ffb74d; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
+        .container { max-width: 1100px; margin: auto; background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }       
+        h2 { color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 0; }       
+        .toolbar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }      
+        .stats-bar { display: flex; gap: 15px; margin-bottom: 15px; background: #252525; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; justify-content: center; }
+        .stat-item { display: flex; align-items: center; gap: 5px; }
+        .stat-item b { color: var(--primary); }
+        .input-form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; background: #252525; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-size: 11px; color: var(--secondary); margin-bottom: 5px; text-transform: uppercase; }
+        .full-width { grid-column: 1 / -1; }
+		.input-form input, .search-box { width: 100%; box-sizing: border-box; } 
+		input, textarea { background: #2d2d2d; border: 1px solid var(--border); color: white; padding: 10px; border-radius: 4px; outline: none; } 
+		input:focus { border-color: var(--primary); } 
+		textarea { width: 100%; height: 180px; font-family: 'Consolas', monospace; box-sizing: border-box; margin-bottom: 10px; border: 1px solid var(--primary); resize: vertical; }
+        .btn { padding: 10px 15px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; transition: 0.2s; font-size: 13px; display: flex; align-items: center; gap: 5px; justify-content: center; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.1); }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-secondary { background: var(--secondary); color: #000; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--error); color: white; }
+        .btn-warning { background: var(--warning); color: #000; }
+        .btn-file { background: #444; color: white; }
+		.btn-edit { background: #42a5f5; color: white; padding: 5px 8px; font-size: 12px; }
+        #channelManager { margin-top: 30px; border-top: 2px solid var(--border); padding-top: 20px; }
+        .search-box { width: 100%; padding: 12px; margin-bottom: 15px; font-size: 16px; border: 2px solid var(--primary); background: #181818; border-radius: 8px; box-sizing: border-box; color: white; }     
+        .channel-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; max-height: 500px; overflow-y: auto; background: #181818; padding: 15px; border-radius: 8px; border: 1px solid var(--border); }        
+        .channel-item { background: #2d2d2d; padding: 12px; border-radius: 6px; display: flex; align-items: center; gap: 12px; border: 1px solid #444; position: relative; }
+        .channel-item.hidden { display: none; }        
+        .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #555; flex-shrink: 0; transition: 0.3s; }
+        .status-online { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .status-offline { background: var(--error); box-shadow: 0 0 8px var(--error); }
+        .status-checking { background: orange; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        .channel-info { flex-grow: 1; font-size: 0.9em; overflow: hidden; }
+        .channel-info strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
+        .channel-group { color: var(--secondary); font-size: 0.75em; display: block; margin-top: 2px; }
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 10001; }
+        .modal-box { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--primary); max-width: 500px; width: 90%; text-align: center; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; background: #333; border-left: 5px solid var(--primary); color: white; z-index: 10000; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .progress-container { width: 100%; background: #333; border-radius: 10px; height: 8px; margin: 15px 0; overflow: hidden; display: none; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary)); width: 0%; transition: width 0.3s ease; }
+        .hidden { display: none; }
+        .lang-switcher { text-align: right; margin-bottom: 10px; }
+        .lang-switcher select { background: #252525; color: white; border: 1px solid var(--border); padding: 5px; border-radius: 4px; cursor: pointer; } 
+        .raven-icon { color: #607d8b; margin-left: 5px; transition: all 0.3s ease; display: inline-block; } b:hover .raven-icon, .raven-icon:hover { color: var(--primary) !important; transform: scale(1.2) rotate(-15deg); text-shadow: 0 0 8px var(--primary); }
+</style>
+</head>
+<body>
+<div id="customModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3 id="modalTitle" style="color: var(--primary); margin: 0 0 15px 0;">Confirmación</h3>
+        <div id="modalMsg" style="font-size: 14px; color: #ccc;"></div>
+        <div class="modal-buttons" id="modalActions"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="lang-switcher">
+        <select id="langSelect" onchange="cambiarIdioma(this.value)">
+            <option value="es">🇲🇽 Español</option>
+            <option value="en">🇺🇸 English</option>
+        </select>
+    </div>
+
+    <h2>
+        <span><span data-i18n="t_title">📺 M3U Editor Pro Elite</span> 
+		<button class="btn btn-primary" style="display:inline-flex; padding: 5px 10px; font-size: 12px; margin-left: 10px;" onclick="mostrarInfoSitio()">ℹ️ Info</button>
+		<button class="btn btn-primary" style="display:inline-flex; padding: 5px 10px; font-size: 12px; margin-left: 10px;" onclick="mostrarContacto()">📩 Contact</button></span>
+		<button class="btn btn-secondary" onclick="procesarLista()" data-i18n="t_cargar">🔄 Cargar M3U</button>
+    </h2>   
+    
+    <div class="stats-bar">
+        <div class="stat-item"><span data-i18n="t_total">Total</span>: <b class="statTotal">0</b></div>
+        <div class="stat-item"><span data-i18n="t_online">🟢 Online</span>: <b class="statOnline">0</b></div>
+        <div class="stat-item"><span data-i18n="t_offline">🔴 Offline</span>: <b class="statOffline">0</b></div>
+        <div class="stat-item"><span data-i18n="t_grupos">📂 Grupos</span>: <b class="statGroups">0</b></div>
+    </div>   
+    
+    <div class="toolbar">
+        <input type="file" id="fileInput" accept=".m3u,.txt" style="display:none"/>
+        <button class="btn btn-file" onclick="document.getElementById('fileInput').click()" data-i18n="t_abrir">📂 Abrir Archivo</button>
+        <button class="btn btn-secondary" onclick="exportarM3U()" data-i18n="t_guardar_m3u">💾 Guardar .m3u</button>
+        <button class="btn btn-primary" onclick="ordenarAlfabeticamente()" data-i18n="t_ordenar">🔤 Ordenar A-Z</button>
+        <button class="btn btn-success" onclick="limpiarSintaxis()" data-i18n="t_autofix">✨ Auto-Fix</button>
+        <button class="btn btn-warning" onclick="extraerEnlaces()" data-i18n="t_extraer">🔗 Extraer URLs</button>
+        <button class="btn btn-danger" onclick="confirmarAccionReset()" data-i18n="t_reset">🗑️ Reset</button>
+    </div>
+
+    <div class="input-form">
+        <input type="hidden" id="editIndex" value="-1"/>
+        <div class="form-group"><label data-i18n="t_tvgid">TVG-ID</label><input type="text" id="tvgId" placeholder="Discovery.es"/></div>
+        <div class="form-group"><label data-i18n="t_tvglogo">TVG-LOGO</label><input type="text" id="tvgLogo" placeholder="URL Imagen"/></div>
+        <div class="form-group"><label data-i18n="t_cat">Categoría</label><input type="text" id="groupTitle" placeholder="General"/></div>
+        <div class="form-group"><label data-i18n="t_nom">Nombre Canal</label><input type="text" id="channelName"/></div>
+        <div class="form-group full-width"><label data-i18n="t_url">URL Stream</label><input type="text" id="streamUrl"/></div>
+        <div style="grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 10px;">
+            <button class="btn btn-primary" id="btnGuardar" style="flex: 2;" onclick="agregarOEditarCanal()" data-i18n="t_btn_save">➕ Guardar Canal</button>
+            <button class="btn btn-secondary" style="flex: 1;" onclick="removerDuplicados()" data-i18n="t_btn_dup">🚫 Quitar Duplicados</button>
+        </div>
+    </div>
+
+    <textarea id="m3uContent" placeholder="#EXTM3U..."></textarea>
+
+    <div id="channelManager">
+        <div class="stats-bar">
+            <div class="stat-item"><span data-i18n="t_total">Total</span>: <b class="statTotal">0</b></div>
+            <div class="stat-item"><span data-i18n="t_online">🟢 Online</span>: <b class="statOnline">0</b></div>
+            <div class="stat-item"><span data-i18n="t_offline">🔴 Offline</span>: <b class="statOffline">0</b></div>
+            <div class="stat-item"><span data-i18n="t_grupos">📂 Grupos</span>: <b class="statGroups">0</b></div>
+        </div>
+
+        <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar canales o grupos..." data-i18n="t_buscar" onkeyup="filtrarCanales()"/>
+        
+        <div style="margin-bottom: 15px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center;">
+            <button class="btn btn-success" id="btnCheck" onclick="verificarTodosLosEstados()" data-i18n="t_test">⚡ Test de Estado</button>
+            <button class="btn btn-danger" onclick="eliminarOffline()" data-i18n="t_borrar_off">🗑️ Borrar Offline</button>
+            <button class="btn btn-file" onclick="toggleSeleccionarTodos()" data-i18n="t_sel">✅ Selec. Visibles</button>
+            <button class="btn btn-danger" onclick="eliminarSeleccionados()" data-i18n="t_borrar_sel">❌ Borrar Seleccionados</button>
+            <button class="btn btn-primary" onclick="moverVariosAGrupo()" data-i18n="t_mover">📁 Mover a Grupo</button>
+        </div>
+
+        <div class="progress-container" id="progCont"><div class="progress-bar" id="progBar"></div></div>
+        <div class="channel-list" id="channelList"></div>
+    </div>
+</div>
+
+<footer style="margin-top: 30px; padding: 20px; text-align: center; border-top: 1px solid var(--border); font-size: 13px; color: #666;">
+    <div style="margin-bottom: 15px;">
+        <a href="https://buymeacoffee.com/ravenbreeder" target="_blank" style="text-decoration: none;">
+            <button class="btn" style="background: #ff813f; color: white; display: inline-flex; margin: auto; padding: 10px 20px; border-radius: 50px; font-size: 14px;" data-i18n="t_cafe">
+                ☕ ¡Invítame un café!
+            </button>
+        </a>
+    </div>
+
+    <p>© <span id="year">2026</span> | M3U Editor Pro Elite</p>    
+    <p><span data-i18n="t_dev">Desarrollado con ❤️ por</span> <span id="author-credit"><b style="color: #607d8b;">RavenBreeder</b></span><i class="fas fa-crow raven-icon"></i></p>   
+    <p style="font-size: 11px; opacity: 0.6;" data-i18n="t_powered">Potenciado por Elite Stream Technology</p>
+</footer>
+
+<script type='text/javascript'>
+const i18n = {
+        es: {
+            t_title: "📺 M3U Editor Pro Elite",
+            t_cargar: "🔄 Cargar M3U",
+            t_total: "Total",
+            t_online: "🟢 Online",
+            t_offline: "🔴 Offline",
+            t_grupos: "📂 Grupos",
+            t_abrir: "📂 Abrir Archivo",
+            t_guardar_m3u: "💾 Guardar .m3u",
+            t_ordenar: "🔤 Ordenar A-Z",
+            t_autofix: "✨ Auto-Fix",
+            t_extraer: "🔗 Extraer URLs",
+            t_reset: "🗑️ Reset",
+            t_tvgid: "TVG-ID",
+            t_tvglogo: "TVG-LOGO",
+            t_cat: "Categoría",
+            t_nom: "Nombre Canal",
+            t_url: "URL Stream",
+            t_btn_save: "➕ Guardar Canal",
+            t_btn_save_upd: "💾 Actualizar",
+            t_btn_dup: "🚫 Quitar Duplicados",
+            t_buscar: "🔍 Buscar canales o grupos...",
+            t_test: "⚡ Test de Estado",
+            t_borrar_off: "🗑️ Borrar Offline",
+            t_sel: "✅ Selec. Visibles",
+            t_borrar_sel: "❌ Borrar Seleccionados",
+            t_mover: "📁 Mover a Grupo",
+            t_cafe: "☕ ¡Invítame un café!",
+            msg_confirm_reset: "¿Borrar todo el contenido?",
+            msg_recuperada: "Se recuperó una sesión anterior. ¿Cargarla?",
+            msg_dup_count: "Se eliminaron {n} duplicados",
+            msg_no_dup: "No se encontraron duplicados",
+            msg_test_fin: "⚡ Test finalizado.",
+            msg_borrar_n: "¿Borrar {n} canales?",
+            msg_caidos: "¿Eliminar todos los caídos?",
+            info_guia: "📖 Guía de Usuario",
+            info_desc: "<b>M3U Editor Pro Elite</b> es una herramienta avanzada para la gestión y limpieza de listas de reproducción IPTV.",
+            info_f_title: "🚀 Funciones Principales:",
+            info_f_load: "<b>Cargar M3U:</b> Renderiza el texto del área inferior en la lista visual.",
+            info_f_test: "<b>Test de Estado:</b> Verifica en tiempo real si los enlaces están activos (Online) o caídos (Offline).",
+            info_f_fix: "<b>Auto-Fix:</b> Repara errores de sintaxis y elimina líneas vacías innecesarias.",
+            info_f_ext: "<b>Extraer URLs:</b> Escanea cualquier texto sucio y rescata solo los enlaces de streaming válidos.",
+            info_f_dup: "<b>Quitar Duplicados:</b> Limpia la lista de enlaces repetidos automáticamente.",
+            info_t_title: "💡 Tips de Uso:",
+            info_t_edit: "Puedes editar canales individualmente usando el icono ✏️.",
+            info_t_move: "Usa 'Mover a Grupo' para organizar varios canales a la vez.",
+            info_t_back: "El sistema guarda un <b>respaldo automático</b> en tu navegador por si cierras la pestaña por error.",
+            info_version: "Versión 1.0 - Editor Profesional de alto rendimiento.",
+			t_dev: "Desarrollado con ❤️ por",
+			t_powered: "Potenciado por Elite Stream Technology",
+			t_footer_text: "Editor Profesional de alto rendimiento",
+			t_btn_contact: "📩 Contacto",
+			c_title: "📩 Contacto Raven Breeder",
+			c_name: "Tu Nombre / Alias",
+			c_email: "Correo Electrónico",
+			c_msg: "Mensaje / Sugerencia",
+			c_placeholder_name: "Ej. Raven User",
+			c_placeholder_msg: "¿Qué nueva función te gustaría ver?",
+			c_send: "Enviar Mensaje"
+        },
+        en: {
+            t_title: "📺 M3U Editor Pro Elite",
+            t_cargar: "🔄 Load M3U",
+            t_total: "Total",
+            t_online: "🟢 Online",
+            t_offline: "🔴 Offline",
+            t_grupos: "📂 Groups",
+            t_abrir: "📂 Open File",
+            t_guardar_m3u: "💾 Save .m3u",
+            t_ordenar: "🔤 Sort A-Z",
+            t_autofix: "✨ Auto-Fix",
+            t_extraer: "🔗 Extract URLs",
+            t_reset: "🗑️ Reset",
+            t_tvgid: "TVG-ID",
+            t_tvglogo: "TVG-LOGO",
+            t_cat: "Category",
+            t_nom: "Channel Name",
+            t_url: "Stream URL",
+            t_btn_save: "➕ Save Channel",
+            t_btn_save_upd: "💾 Update",
+            t_btn_dup: "🚫 Remove Duplicates",
+            t_buscar: "🔍 Search channels or groups...",
+            t_test: "⚡ Status Test",
+            t_borrar_off: "🗑️ Delete Offline",
+            t_sel: "✅ Select Visible",
+            t_borrar_sel: "❌ Delete Selected",
+            t_mover: "📁 Move to Group",
+            t_cafe: "☕ Buy me a coffee!",
+            msg_confirm_reset: "Clear all content?",
+            msg_recuperada: "Previous session recovered. Load it?",
+            msg_dup_count: "{n} duplicates removed",
+            msg_no_dup: "No duplicates found",
+            msg_test_fin: "⚡ Test finished.",
+            msg_borrar_n: "Delete {n} channels?",
+            msg_caidos: "Delete all offline channels?",        
+            info_guia: "📖 User Guide",
+            info_desc: "<b>M3U Editor Pro Elite</b> is an advanced tool for managing and cleaning IPTV playlists.",
+            info_f_title: "🚀 Main Functions:",
+            info_f_load: "<b>Load M3U:</b> Renders the text from the bottom area into the visual list.",
+            info_f_test: "<b>Status Test:</b> Real-time check to see if links are active (Online) or broken (Offline).",
+            info_f_fix: "<b>Auto-Fix:</b> Repairs syntax errors and removes unnecessary empty lines.",
+            info_f_ext: "<b>Extract URLs:</b> Scans any raw text and rescues only valid streaming links.",
+            info_f_dup: "<b>Remove Duplicates:</b> Automatically cleans the list of repeated links.",
+            info_t_title: "💡 Usage Tips:",
+            info_t_edit: "You can edit channels individually using the ✏️ icon.",
+            info_t_move: "Use 'Move to Group' to organize several channels at once.",
+            info_t_back: "The system saves an <b>automatic backup</b> in your browser in case you close the tab by mistake.",
+            info_version: "Version 1.0 - High-performance Professional Editor.",
+			t_dev: "Developed with ❤️ by",
+			t_powered: "Powered by Elite Stream Technology",
+			t_footer_text: "High-performance Professional Editor",
+			t_btn_contact: "📩 Contact",
+			c_title: "📩 Contact Raven Breeder",
+			c_name: "Your Name / Alias",
+			c_email: "Email Address",
+			c_msg: "Message / Suggestion",
+			c_placeholder_name: "e.g. Raven User",
+			c_placeholder_msg: "What new feature would you like to see?",
+			c_send: "Send Message"			
+        }
+    };
+
+    let currentLang = localStorage.getItem('m3u_lang') || 'es';
+
+function cambiarIdioma(lang) {
+    currentLang = lang;
+    localStorage.setItem('m3u_lang', lang);
+    const selector = document.getElementById('langSelect');
+    if (selector) selector.value = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const translation = i18n[lang][key];
+        if (translation) {
+            if (el.hasAttribute('placeholder')) {
+                el.setAttribute('placeholder', translation);
+            } else {
+                el.innerText = translation;
+            }
+        }
+    });
+
+    const btnSave = document.getElementById('btnGuardar');
+    if (btnSave) {
+        const isEdit = document.getElementById('editIndex').value !== "-1";
+        btnSave.innerText = isEdit ? i18n[lang].t_btn_save_upd : i18n[lang].t_btn_save;
+    }
+}
+
+    const textArea = document.getElementById('m3uContent');
+    const channelListDiv = document.getElementById('channelList');
+    const DEFAULT_LOGO = "https://i.imgur.com/dw6puHC.png";
+    let canalesData = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    const yearEl = document.getElementById('year');
+    if(yearEl) yearEl.textContent = new Date().getFullYear();
+    
+    const browserLang = navigator.language || navigator.userLanguage;
+    const detectedLang = browserLang.startsWith('en') ? 'en' : 'es';
+    
+    currentLang = localStorage.getItem('m3u_lang') || detectedLang;
+    
+    setTimeout(() => {
+        cambiarIdioma(currentLang);
+    }, 150); 
+
+    if (!localStorage.getItem('m3u_lang')) {
+        const msg = currentLang === 'en' ? "Language: English" : "Idioma: Español";
+        if(typeof notify === "function") notify(msg);
+    }
+});
+
+function confirmarAccion(msg, callbackSi, callbackNo) {
+    const modal = document.getElementById('customModal');
+    const lang = i18n[currentLang];
+    
+    document.getElementById('modalMsg').innerText = msg;
+    const actions = document.getElementById('modalActions');
+    
+    const txtConfirmar = currentLang === 'es' ? "Aceptar" : "Accept";
+    const txtCancelar = currentLang === 'es' ? "Cancelar" : "Cancel";
+    
+    actions.innerHTML = `
+        <button class="btn btn-file" id="modalCancelBtn">${txtCancelar}</button>
+        <button class="btn btn-primary" id="modalConfirmBtn" style="margin-left:10px;">${txtConfirmar}</button>
+    `;
+    
+    modal.style.display = 'flex';
+
+    document.getElementById('modalConfirmBtn').onclick = () => { 
+        if(callbackSi) callbackSi(); 
+        closeModal(); 
+    };
+
+    document.getElementById('modalCancelBtn').onclick = () => { 
+        if(callbackNo) callbackNo(); 
+        closeModal(); 
+    };
+}
+
+function saveToLocal() { 
+    localStorage.setItem('m3u_backup', textArea.value); 
+}
+
+window.onload = () => {
+    const savedLang = localStorage.getItem('m3u_lang') || 'es';
+    cambiarIdioma(savedLang);
+
+    const backup = localStorage.getItem('m3u_backup');
+    const lang = i18n[currentLang];
+
+    if (backup && backup.trim().length > 20) {
+        confirmarAccion(
+            lang.msg_recuperada, 
+            () => { 
+                textArea.value = backup;
+                procesarLista();
+                setTimeout(() => {
+                    notify(currentLang === 'es' ? "✅ Lista restaurada" : "✅ Playlist restored");
+                }, 500);
+            },
+            () => {
+                localStorage.removeItem('m3u_backup');
+                textArea.value = ""; 
+                notify(currentLang === 'es' ? "🗑️ Memoria limpiada" : "🗑️ Memory cleared");
+            }
+        );
+    }
+};
+
+function mostrarContacto() {
+    const lang = i18n[currentLang];
+    
+    const contactHTML = `
+        <div style="text-align: left; padding: 10px; color: #eee; font-family: sans-serif;">
+            <form action="https://formspree.io/f/mvzbnaqj" method="POST">
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_name}</label>
+                    <input type="text" name="name" required placeholder="${lang.c_placeholder_name}" 
+                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#0f172a; color:white; box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_email}</label>
+                    <input type="email" name="email" required placeholder="tu@email.com" 
+                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#0f172a; color:white; box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_msg}</label>
+                    <textarea name="message" rows="4" required placeholder="${lang.c_placeholder_msg}" 
+                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#0f172a; color:white; box-sizing:border-box; resize:none;"></textarea>
+                </div>
+                <button type="submit" class="contact-btn" style="width:100%; background:#8B5CF6; color:white; border:none; padding:12px; border-radius:6px; cursor:pointer; font-weight:bold;">
+                    ${lang.c_send}
+                </button>
+            </form>
+        </div>
+    `;
+
+    document.getElementById('modalTitle').innerText = lang.c_title;
+    document.getElementById('modalMsg').innerHTML = contactHTML;
+    document.getElementById('modalActions').innerHTML = `<button class="btn btn-file" onclick="closeModal()">Cerrar / Close</button>`;
+    document.getElementById('customModal').style.display = 'flex';
+}
+
+    function confirmarAccionReset() {
+        confirmarAccion(i18n[currentLang].msg_confirm_reset, () => limpiarTodo());
+    }
+
+    function customAlert(msg) {
+        const modal = document.getElementById('customModal');
+        document.getElementById('modalMsg').innerText = msg;
+        document.getElementById('modalActions').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">OK</button>`;
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() { document.getElementById('customModal').style.display = 'none'; }
+    
+    function notify(msg) {
+        const t = document.createElement('div');
+        t.className = 'toast'; t.innerText = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    function actualizarStats() {
+        const total = canalesData.length;
+        const grupos = new Set(canalesData.map(c => c.grupo)).size;
+        const online = document.querySelectorAll('.status-online').length;
+        const offline = document.querySelectorAll('.status-offline').length;
+        document.querySelectorAll('.statTotal').forEach(el => el.innerText = total);
+        document.querySelectorAll('.statGroups').forEach(el => el.innerText = grupos);
+        document.querySelectorAll('.statOnline').forEach(el => el.innerText = online);
+        document.querySelectorAll('.statOffline').forEach(el => el.innerText = offline);
+    }
+
+    function agregarOEditarCanal() {
+        const n = document.getElementById('channelName').value.trim();
+        const u = document.getElementById('streamUrl').value.trim();
+        if(!n || !u) return customAlert("Nombre y URL requeridos");
+
+        const id = document.getElementById('tvgId').value.trim();
+        let logo = document.getElementById('tvgLogo').value.trim() || DEFAULT_LOGO;
+        const grp = document.getElementById('groupTitle').value.trim() || "General";
+        const idx = parseInt(document.getElementById('editIndex').value);
+        const info = `#EXTINF:-1 tvg-id="${id}" tvg-logo="${logo}" group-title="${grp}",${n}`;
+        
+        if(idx > -1) canalesData[idx] = {info, url:u, nombre:n, grupo:grp};
+        else canalesData.push({info, url:u, nombre:n, grupo:grp});
+        
+        actualizarTextAreaDesdeData(canalesData);
+        resetForm();
+    }
+
+    function resetForm() {
+        document.getElementById('editIndex').value = "-1";
+        document.getElementById('tvgId').value = "";
+        document.getElementById('tvgLogo').value = "";
+        document.getElementById('channelName').value = "";
+        document.getElementById('streamUrl').value = "";
+        document.getElementById('groupTitle').value = "";
+        document.getElementById('btnGuardar').innerText = i18n[currentLang].t_btn_save;
+    }
+
+    function procesarLista() {
+        const lineas = textArea.value.split('\n');
+        channelListDiv.innerHTML = "";
+        canalesData = [];
+        let indexCont = 0;
+
+        for (let i = 0; i < lineas.length; i++) {
+            let line = lineas[i].trim();
+            if (line.startsWith("#EXTINF")) {
+                let info = line;
+                let url = "";
+                for(let j = i+1; j < lineas.length; j++){
+                    if(lineas[j].trim().startsWith('http')){ url = lineas[j].trim(); i = j; break; }
+                }
+                if (url) {
+                    const nombre = info.split(',').pop().trim() || "Canal";
+                    const gMatch = info.match(/group-title="([^"]*)"/);
+                    const g = gMatch ? gMatch[1] : "General";
+                    canalesData.push({ info, url, nombre, grupo: g });
+
+                    const div = document.createElement('div');
+                    div.className = 'channel-item';
+                    div.id = `canal-${indexCont}`;
+                    div.setAttribute('data-search', (nombre + " " + g).toLowerCase());
+                    div.innerHTML = `
+                        <div class="status-dot" id="dot-${indexCont}"></div>
+                        <input type="checkbox" class="chk-canal" data-index="${indexCont}">
+                        <div class="channel-info"><strong>${nombre}</strong><span class="channel-group">📁 ${g}</span></div>
+                        <button class="btn btn-primary" style="padding:5px" onclick="cargarParaEditar(${indexCont})">✏️</button>
+                    `;
+                    channelListDiv.appendChild(div);
+                    indexCont++;
+                }
+            }
+        }
+        actualizarStats();
+        saveToLocal();
+    }
+
+    function removerDuplicados() {
+        const vistos = new Set();
+        const unicos = canalesData.filter(c => {
+            if (vistos.has(c.url)) return false;
+            vistos.add(c.url);
+            return true;
+        });
+        const borrados = canalesData.length - unicos.length;
+        if(borrados > 0) {
+            actualizarTextAreaDesdeData(unicos);
+            notify(i18n[currentLang].msg_dup_count.replace('{n}', borrados));
+        } else {
+            notify(i18n[currentLang].msg_no_dup);
+        }
+    }
+
+    async function verificarTodosLosEstados() {
+        const vis = Array.from(document.querySelectorAll('.channel-item:not(.hidden)'));
+        if (vis.length === 0) return;
+        const btn = document.getElementById('btnCheck');
+        btn.disabled = true;
+        document.getElementById('progCont').style.display = "block";
+        
+        for (let i = 0; i < vis.length; i += 50) {
+            const lote = vis.slice(i, i + 50);
+            await Promise.all(lote.map(item => {
+                const idx = item.id.split('-')[1];
+                return verificarEstadoSingle(canalesData[idx].url, idx);
+            }));
+            document.getElementById('progBar').style.width = ((i + lote.length) / vis.length * 100) + "%";
+        }
+        btn.disabled = false;
+        setTimeout(() => document.getElementById('progCont').style.display = "none", 2000);
+        notify(i18n[currentLang].msg_test_fin);
+    }
+
+    async function verificarEstadoSingle(url, id) {
+        const dot = document.getElementById(`dot-${id}`);
+        dot.className = "status-dot status-checking";
+        try {
+            const ctrl = new AbortController();
+            const tid = setTimeout(() => ctrl.abort(), 8000);
+            await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: ctrl.signal });
+            clearTimeout(tid);
+            dot.className = "status-dot status-online";
+        } catch { dot.className = "status-dot status-offline"; }
+        actualizarStats();
+    }
+
+    function cargarParaEditar(idx) {
+        const c = canalesData[idx];
+        document.getElementById('tvgId').value = (c.info.match(/tvg-id="([^"]*)"/) || ["",""])[1];
+        const lMatch = (c.info.match(/tvg-logo="([^"]*)"/) || ["",""])[1];
+        document.getElementById('tvgLogo').value = (lMatch === DEFAULT_LOGO) ? "" : lMatch;
+        document.getElementById('groupTitle').value = c.grupo;
+        document.getElementById('channelName').value = c.nombre;
+        document.getElementById('streamUrl').value = c.url;
+        document.getElementById('editIndex').value = idx;
+        document.getElementById('btnGuardar').innerText = i18n[currentLang].t_btn_save_upd;
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function actualizarTextAreaDesdeData(data) {
+        let t = "#EXTM3U\n";
+        data.forEach(c => t += `\n${c.info}\n${c.url}`);
+        textArea.value = t;
+        procesarLista();
+    }
+
+    function extraerEnlaces() {
+        const raw = textArea.value;
+        const links = raw.match(/https?:\/\/[^\s$.?#].[^\s]*/g);
+        if (!links) return;
+        let m3u = "#EXTM3U\n";
+        links.forEach((l, i) => m3u += `\n#EXTINF:-1 tvg-logo="${DEFAULT_LOGO}" group-title="Extraídos",Canal ${i+1}\n${l}`);
+        textArea.value = m3u;
+        procesarLista();
+    }
+
+    function moverVariosAGrupo() {
+        const sel = document.querySelectorAll('.chk-canal:checked');
+        if (sel.length === 0) return;
+        const nGrp = prompt("Nuevo nombre del grupo:");
+        if (!nGrp) return;
+        sel.forEach(c => {
+            const i = c.dataset.index;
+            let inf = canalesData[i].info;
+            if (inf.includes('group-title="')) inf = inf.replace(/group-title="[^"]*"/, `group-title="${nGrp}"`);
+            else inf = inf.replace('#EXTINF:-1', `#EXTINF:-1 group-title="${nGrp}"`);
+            canalesData[i].info = inf;
+            canalesData[i].grupo = nGrp;
+        });
+        actualizarTextAreaDesdeData(canalesData);
+    }
+
+    function ordenarAlfabeticamente() {
+        actualizarTextAreaDesdeData([...canalesData].sort((a,b) => a.nombre.localeCompare(b.nombre)));
+    }
+
+    function filtrarCanales() {
+        const t = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.channel-item').forEach(i => i.classList.toggle('hidden', !i.getAttribute('data-search').includes(t)));
+    }
+
+    function toggleSeleccionarTodos() {
+        const vis = document.querySelectorAll('.channel-item:not(.hidden) .chk-canal');
+        const todos = Array.from(vis).every(c => c.checked);
+        vis.forEach(c => c.checked = !todos);
+    }
+
+    function eliminarSeleccionados() {
+        const sel = document.querySelectorAll('.chk-canal:checked');
+        if (sel.length === 0) return;
+        confirmarAccion(i18n[currentLang].msg_borrar_n.replace('{n}', sel.length), () => {
+            const idxs = Array.from(sel).map(c => parseInt(c.dataset.index));
+            actualizarTextAreaDesdeData(canalesData.filter((_, i) => !idxs.includes(i)));
+        });
+    }
+
+    function eliminarOffline() {
+        const off = document.querySelectorAll('.status-offline');
+        if (off.length === 0) return;
+        confirmarAccion(i18n[currentLang].msg_caidos, () => {
+            const idxs = Array.from(off).map(d => parseInt(d.id.split('-')[1]));
+            actualizarTextAreaDesdeData(canalesData.filter((_, i) => !idxs.includes(i)));
+        });
+    }
+
+    function limpiarSintaxis() {
+        let l = textArea.value.split('\n').filter(x => x.trim() !== "");
+        let res = ["#EXTM3U"];
+        for(let i=0; i<l.length; i++) {
+            if(l[i].startsWith("#EXTINF")) { res.push(l[i]); if(l[i+1]?.startsWith("http")) { res.push(l[i+1]); i++; } }
+        }
+        textArea.value = res.join('\n');
+        procesarLista();
+    }
+
+    function exportarM3U() {
+        const blob = new Blob([textArea.value], {type: 'text/plain'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "lista_pro.m3u";
+        a.click();
+    }
+
+	function mostrarInfoSitio() {
+		const lang = i18n[currentLang];
+		
+		const infoHTML = `
+			<div style="text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; color: #eee; font-size: 13px;">
+				<p>${lang.info_desc}</p>
+				<p><b style="color:var(--primary)">${lang.info_f_title}</b></p>
+				<ul>
+					<li>${lang.info_f_load}</li>
+					<li>${lang.info_f_test}</li>
+					<li>${lang.info_f_fix}</li>
+					<li>${lang.info_f_ext}</li>
+					<li>${lang.info_f_dup}</li>
+				</ul>
+				<p><b style="color:var(--secondary)">${lang.info_t_title}</b></p>
+				<ul>
+					<li>${lang.info_t_edit}</li>
+					<li>${lang.info_t_move}</li>
+					<li>${lang.info_t_back}</li>
+				</ul>
+				<p style="font-size: 11px; color: #888; border-top: 1px solid #444; padding-top:10px">${lang.info_version}</p>
+			</div>
+		`;
+	
+		const modalTitle = document.getElementById('modalTitle');
+		const modalMsg = document.getElementById('modalMsg');
+		const modalActions = document.getElementById('modalActions');
+		const modal = document.getElementById('customModal');
+	
+		if (modalTitle) modalTitle.innerText = lang.info_guia;
+		if (modalMsg) modalMsg.innerHTML = infoHTML;
+		if (modalActions) modalActions.innerHTML = `<button class="btn btn-primary" onclick="closeModal()">OK</button>`;
+		
+		if (modal) modal.style.display = 'flex';
+	}
+
+    function limpiarTodo() { textArea.value = "#EXTM3U\n"; procesarLista(); }
+
+document.getElementById('fileInput').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const r = new FileReader();
+    r.onload = () => { 
+        textArea.value = r.result; 
+        procesarLista(); 
+        const msg = currentLang === 'es' ? "✅ Lista importada correctamente" : "✅ List imported successfully";
+        setTimeout(() => {
+            notify(msg);
+        }, 100);
+    };
+    r.readAsText(file);
+});
+</script>
+</body>
+</html>
