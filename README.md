@@ -35,7 +35,7 @@ El objetivo principal de este proyecto es ofrecer una alternativa segura a los e
 Esta herramienta ha sido construida para ser 100% transparente:
 * **100% Lado del Cliente (Client-Side):** Todo el procesamiento ocurre en la memoria RAM de tu navegador mediante JavaScript.
 * **Sin Backend:** Alojado en Blogger/GitHub Pages, lo que significa que no existe PHP ni bases de datos para almacenar tus enlaces.
-* **El Test Offline:** Puedes cargar el sitio, desconectar tu internet y el editor seguirá funcionando perfectamente. Nunca se envían datos a servidores externos.
+* **El Test Offline:** Puedes cargar el sitio, desconectar tu internet y el editor seguirá funcionando perfectamente. No se envían datos a servidores externos.
 
 ## ✨ Funciones Principales
 * 🖱️ **Arrastrar y Soltar:** Reordena tus canales fácilmente.
@@ -45,7 +45,7 @@ Esta herramienta ha sido construida para ser 100% transparente:
 * 📝 **Soporte Avanzado:** Preserva etiquetas `#KODIPROP` y manifiestos DASH (`.mpd`) (Próximamente).
 
 ## 🚀 Cómo usarlo
-Simplemente visita [https://m3ueditorpro.blogspot.com/](https://m3ueditorpro.blogspot.com/), carga tu archivo M3U, edítalo y descarga tu versión limpia.
+Simplemente visita la [página del proyecto](https://ravenbreeder.github.io/m3u-editor-pro-elite/), carga tu archivo M3U, edítalo y descarga tu versión limpia.
 
 ## ⚖️ Licencia
-Este proyecto está bajo la Licencia MIT - mira el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
