@@ -1,165 +1,178 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="M3U Editor Pro Elite: La herramienta definitiva para gestionar, limpiar y verificar listas IPTV. Organiza canales, elimina duplicados y testea enlaces online/offline gratis.">
-	<meta name="keywords" content="m3u editor, iptv playlist editor, editar lista m3u, limpiar m3u, verificar links iptv, iptv online tester, m3u8 editor, organizar canales iptv, raven breeder, elite stream technology">
-	<meta property="og:title" content="M3U Editor Pro Elite">
-	<meta property="og:description" content="Gestiona y optimiza tus listas IPTV de forma profesional. Rápido, potente y gratuito.">
-	<meta property="og:type" content="website">
-	<meta name="author" content="Raven Breeder">    
-	<link rel="icon" type="image/x-icon" href="img/favicon.ico">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>M3U Editor Pro Elite</title>
-<style>
-		:root { --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; --primary: #bb86fc; --secondary: #03dac6; --error: #cf6679; --border: #333; --success: #4caf50; --warning: #ffb74d; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
-        .container { max-width: 1100px; margin: auto; background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }       
-        h2 { color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 0; }       
-        .toolbar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }      
-        .stats-bar { display: flex; gap: 15px; margin-bottom: 15px; background: #252525; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; justify-content: center; }
-        .stat-item { display: flex; align-items: center; gap: 5px; }
-        .stat-item b { color: var(--primary); }
-        .input-form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; background: #252525; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border); }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 11px; color: var(--secondary); margin-bottom: 5px; text-transform: uppercase; }
-        .full-width { grid-column: 1 / -1; }
-		.input-form input, .search-box { width: 100%; box-sizing: border-box; } 
-		input, textarea { background: #2d2d2d; border: 1px solid var(--border); color: white; padding: 10px; border-radius: 4px; outline: none; } 
-		input:focus { border-color: var(--primary); } 
-		textarea { width: 100%; height: 180px; font-family: 'Consolas', monospace; box-sizing: border-box; margin-bottom: 10px; border: 1px solid var(--primary); resize: vertical; }
-        .btn { padding: 10px 15px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; transition: 0.2s; font-size: 13px; display: flex; align-items: center; gap: 5px; justify-content: center; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.1); }
-        .btn-primary { background: var(--primary); color: #000; }
-        .btn-secondary { background: var(--secondary); color: #000; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-danger { background: var(--error); color: white; }
-        .btn-warning { background: var(--warning); color: #000; }
-        .btn-file { background: #444; color: white; }
-		.btn-edit { background: #42a5f5; color: white; padding: 5px 8px; font-size: 12px; }
-        #channelManager { margin-top: 30px; border-top: 2px solid var(--border); padding-top: 20px; }
-        .search-box { width: 100%; padding: 12px; margin-bottom: 15px; font-size: 16px; border: 2px solid var(--primary); background: #181818; border-radius: 8px; box-sizing: border-box; color: white; }     
-        .channel-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; max-height: 500px; overflow-y: auto; background: #181818; padding: 15px; border-radius: 8px; border: 1px solid var(--border); }        
-        .channel-item { background: #2d2d2d; padding: 12px; border-radius: 6px; display: flex; align-items: center; gap: 12px; border: 1px solid #444; position: relative; }
-        .channel-item.hidden { display: none; }        
-        .status-dot { width: 12px; height: 12px; border-radius: 50%; background: #555; flex-shrink: 0; transition: 0.3s; }
-        .status-online { background: var(--success); box-shadow: 0 0 8px var(--success); }
-        .status-offline { background: var(--error); box-shadow: 0 0 8px var(--error); }
-        .status-checking { background: orange; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
-        .channel-info { flex-grow: 1; font-size: 0.9em; overflow: hidden; }
-        .channel-info strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
-        .channel-group { color: var(--secondary); font-size: 0.75em; display: block; margin-top: 2px; }
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 10001; }
-        .modal-box { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--primary); max-width: 500px; width: 90%; text-align: center; }
-        .modal-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
-        .toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; background: #333; border-left: 5px solid var(--primary); color: white; z-index: 10000; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        .progress-container { width: 100%; background: #333; border-radius: 10px; height: 8px; margin: 15px 0; overflow: hidden; display: none; }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary)); width: 0%; transition: width 0.3s ease; }
-        .hidden { display: none; }
-        .lang-switcher { text-align: right; margin-bottom: 10px; }
-        .lang-switcher select { background: #252525; color: white; border: 1px solid var(--border); padding: 5px; border-radius: 4px; cursor: pointer; } 
-        .raven-icon { color: #607d8b; margin-left: 5px; transition: all 0.3s ease; display: inline-block; } b:hover .raven-icon, .raven-icon:hover { color: var(--primary) !important; transform: scale(1.2) rotate(-15deg); text-shadow: 0 0 8px var(--primary); }
+<meta charset='UTF-8'/>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'/>
+<title>M3U Editor Pro Elite | Editor M3U e IPTV</title>
+<meta name='referrer' content='no-referrer'/>
+<meta name='theme-color' content='#12121a'/>
+<meta content='Editor M3U gratuito para organizar listas IPTV, editar canales y grupos, eliminar duplicados, importar y exportar archivos y comprobar respuestas HTTP desde el navegador.' name='description'/>
+<meta content='m3u editor, iptv playlist editor, editar lista m3u, limpiar m3u, verificar links iptv, iptv online tester, m3u8 editor, organizar canales iptv, raven breeder, elite stream technology' name='keywords'/>
+<meta content='M3U Editor Pro Elite' property='og:title'/>
+<meta content='Gestiona y optimiza tus listas IPTV de forma profesional. Rápido, potente y gratuito.' property='og:description'/>
+<meta content='website' property='og:type'/>
+<meta content='Raven Breeder' name='author'/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23c4a0ff%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2238%22%20text-anchor%3D%22middle%22%20font-size%3D%2220%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22bold%22%20fill%3D%22%23211237%22%3EM3U%3C%2Ftext%3E%3C%2Fsvg%3E">
+<style>:root{color-scheme:dark;--bg:#12121a;--card:#1c1c27;--surface:#242433;--input:#161620;--text:#eeeef5;--muted:#b8b7c9;--primary:#c4a0ff;--on-primary:#211237;--secondary:#69e3d2;--border:#404052;--success:#166c46;--error:#a33754;--warning:#ffca80;--button:#39394a;--active:#393050;--focus:#69e3d2;--shadow:0 8px 28px #0003}
+:root[data-theme='light']{color-scheme:light;--bg:#f2f2f7;--card:#fff;--surface:#f5f4fa;--input:#fff;--text:#222234;--muted:#58596e;--primary:#6842a5;--on-primary:#fff;--secondary:#006b60;--border:#c7c5d5;--success:#166c46;--error:#a33754;--warning:#87500b;--button:#e7e5ef;--active:#eee5fc;--focus:#6842a5;--shadow:0 8px 28px #22223410}
+*{box-sizing:border-box}body{font:14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:18px}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}button:not(:disabled):hover{filter:brightness(1.08)}:focus-visible{outline:2px solid var(--focus);outline-offset:3px}a{color:var(--primary)}h1,h2,p{margin:0}h1{font-size:clamp(18px,2vw,24px);line-height:1.25;overflow-wrap:anywhere}h2{font-size:16px;color:var(--text)}.container{max-width:1500px;margin:auto;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px;min-width:0}.app-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:15px;padding-bottom:16px;border-bottom:1px solid var(--border)}.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand-mark{display:grid;place-items:center;background:var(--primary);color:var(--on-primary);border-radius:10px;min-width:48px;height:48px;font-size:13px;font-weight:800}.brand p,.version-tag{font-size:12px;color:var(--muted)}.version-tag{padding:1px 5px;border:1px solid var(--border);border-radius:4px}.header-actions{display:flex;flex-wrap:wrap;align-items:end;gap:8px}.header-actions label{display:grid;gap:3px;font-size:12px;color:var(--muted)}
+input:not([type=checkbox]),textarea,select{border:1px solid var(--border);border-radius:6px;background:var(--input);color:var(--text);padding:9px;min-width:0;max-width:100%}input[type=checkbox]{accent-color:var(--primary);width:17px;height:17px;flex-shrink:0}input::placeholder,textarea::placeholder{color:var(--muted)}.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:36px;padding:7px 11px;border:1px solid transparent;border-radius:6px;font-size:13px;font-weight:650;text-align:center;white-space:normal;max-width:100%;overflow-wrap:anywhere}.btn-primary{background:var(--primary);color:var(--on-primary)}.btn-secondary{background:var(--secondary);color:var(--bg)}:root[data-theme=light] .btn-secondary{color:white}.btn-success{background:var(--success);color:white}.btn-danger{background:var(--error);color:white}.btn-warning{background:var(--warning);color:#271b0f}:root[data-theme=light] .btn-warning{color:white}.btn-file{background:var(--button);color:var(--text);border-color:var(--border)}.toolbar,.channel-actions{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.stats-bar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:16px 0}.stat-item{display:flex;flex-direction:column;gap:3px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px;overflow-wrap:anywhere}.stat-item b{font-size:21px;line-height:1.2;color:var(--text);font-variant-numeric:tabular-nums}.advanced-summary{font-size:12px;color:var(--muted);margin:0 0 12px}
+.workspace{display:grid;grid-template-columns:minmax(190px,240px) minmax(0,1fr);gap:14px;align-items:start}.group-sidebar,#channelManager,.editor-section{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px;min-width:0}.group-sidebar{display:grid;gap:10px}.group-button{display:flex;align-items:center;gap:6px;justify-content:space-between;text-align:left;width:100%;background:var(--card);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 9px;min-height:34px}.group-button span{min-width:0;overflow-wrap:anywhere}.group-button b{flex-shrink:0;color:var(--muted);font-size:12px}.group-button[aria-pressed=true]{background:var(--active);border-color:var(--primary);color:var(--primary);font-weight:700}#sidebarGroups{display:grid;gap:4px;max-height:430px;overflow:auto;padding:3px}.sidebar-pager{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.sidebar-pager .btn{font-size:11px;padding:5px}.section-heading{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}.section-heading h2{margin-right:auto}.search-box{width:100%;margin-bottom:10px}.advanced-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:end;margin-bottom:10px}.advanced-tools .advanced-field{flex:1 1 180px}.advanced-field{display:flex;flex-direction:column;gap:4px;min-width:0;font-size:12px;text-align:left}.advanced-field input,.advanced-field select{width:100%}.advanced-check{display:flex;gap:5px;align-items:center;font-size:12px}.pager{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:8px 0;font-size:12px}.pager select{padding:5px}.channel-list{display:grid;grid-template-columns:1fr;gap:5px;max-height:560px;overflow:auto;padding:4px;background:var(--input);border:1px solid var(--border);border-radius:6px}.channel-list:empty{display:none}.channel-item{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:5px;padding:8px 10px;min-width:0}.channel-info{min-width:0;flex:1;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px}.channel-info strong,.channel-group,.channel-status{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.channel-group,.channel-status{font-size:12px;color:var(--muted)}.channel-group{color:var(--secondary)}.status-dot{width:10px;height:10px;border-radius:50%;background:#9293a3;flex-shrink:0}.status-online{background:#278d59}.status-offline{background:#d34e66}.status-unknown{background:#ce8a20}.status-checking{background:#438bde}.channel-item .btn{min-width:36px}.editor-section{margin-top:14px}.editor-section h2{margin-bottom:8px}.input-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.form-group{display:flex;flex-direction:column;gap:4px;min-width:0}.form-group label{font-size:12px;color:var(--muted)}.full-width{grid-column:1/-1}.input-form>div:last-child{flex-wrap:wrap}.input-form input{width:100%}#m3uContent{width:100%;min-height:150px;font:13px/1.5 ui-monospace,monospace;resize:vertical}.backup-row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:12px;color:var(--muted)}.backup-row label{display:flex;align-items:center;gap:5px}#parserNotice{color:var(--warning);margin:8px 0;font-size:13px}#parseStatus,#pageSummary,#selectionSummary,#emptyChannels{color:var(--muted);overflow-wrap:anywhere}#emptyChannels{padding:12px 0}#parserNotice:empty,#parseStatus:empty,#emptyChannels:empty{display:none}.progress-container{height:8px;background:var(--border);border-radius:8px;overflow:hidden;display:none;margin:10px 0}.progress-bar{height:100%;width:0;background:var(--primary)}.hidden{display:none!important}
+.modal-overlay{position:fixed;inset:0;z-index:10001;background:#0009;display:none;justify-content:center;align-items:center;padding:10px}.modal-box{width:min(100%,560px);max-height:90vh;overflow:auto;background:var(--card);color:var(--text);padding:22px;border:1px solid var(--primary);border-radius:10px;box-shadow:var(--shadow);overflow-wrap:anywhere}.modal-box h3{margin:0 0 15px;color:var(--primary)}#modalMsg{color:var(--text)!important}.modal-buttons{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:16px}.advanced-panel{display:grid;gap:12px;text-align:left}.toast{position:fixed;bottom:15px;right:15px;max-width:min(420px,90vw);background:var(--card);border:1px solid var(--border);border-left:4px solid var(--primary);color:var(--text);padding:12px;border-radius:6px;box-shadow:var(--shadow);z-index:10002;overflow-wrap:anywhere}.app-footer{text-align:center;font-size:13px;color:var(--muted);max-width:1500px;margin:18px auto;padding:15px;border-top:1px solid var(--border)}.app-footer p{margin:5px 0}.donation-link{background:#ffba82;color:#39220f;text-decoration:none}.raven-icon{margin-left:5px}.repo-link{color:var(--primary)}
+:root[data-density=compact] .channel-item{padding:3px 7px;gap:6px}:root[data-density=compact] .channel-list{gap:2px}:root[data-density=compact] .channel-item .btn{min-height:28px}:root[data-density=compact] .group-button{padding:3px 6px;min-height:28px}:root[data-density=compact] .stat-item{padding:6px}:root[data-density=compact] .stat-item b{font-size:18px}
+@media(max-width:1000px){.stats-bar{grid-template-columns:repeat(4,minmax(0,1fr))}.channel-info{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.channel-info strong{grid-column:1/-1}}@media(max-width:730px){body{padding:6px}.container{padding:10px}.workspace{grid-template-columns:1fr}.group-sidebar{gap:7px}#sidebarGroups{max-height:150px;grid-template-columns:repeat(auto-fit,minmax(min(100%,145px),1fr))}.input-form{grid-template-columns:repeat(2,minmax(0,1fr))}.stats-bar{grid-template-columns:repeat(3,minmax(0,1fr))}.channel-list{max-height:480px}.modal-box{padding:15px}.header-actions label{flex:1 1 80px}.header-actions select{width:100%}}@media(max-width:390px){.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.channel-info{grid-template-columns:minmax(0,1fr)}.channel-info strong{grid-column:auto}.header-actions{width:100%}.btn{font-size:12px}.input-form{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+.no-script,.privacy-note{color:var(--muted);font-size:12px;padding:8px 0;overflow-wrap:anywhere}.no-script{padding:12px;border:1px solid var(--border)}
 </style>
 </head>
 <body>
-<div id="customModal" class="modal-overlay">
-    <div class="modal-box">
-        <h3 id="modalTitle" style="color: var(--primary); margin: 0 0 15px 0;">Confirmación</h3>
-        <div id="modalMsg" style="font-size: 14px; color: #ccc;"></div>
-        <div class="modal-buttons" id="modalActions"></div>
+<div class='modal-overlay' id='customModal'>
+    <div class='modal-box' role='dialog' aria-modal='true' aria-labelledby='modalTitle'>
+        <h3 id='modalTitle' style='color: var(--primary); margin: 0 0 15px 0;'>Confirmación</h3>
+        <div id='modalMsg' style='font-size: 14px; color: #ccc;'></div>
+        <div class='modal-buttons' id='modalActions'></div>
     </div>
 </div>
 
-<div class="container">
-    <div class="lang-switcher">
-        <select id="langSelect" onchange="cambiarIdioma(this.value)">
-            <option value="es">🇲🇽 Español</option>
-            <option value="en">🇺🇸 English</option>
-        </select>
-    </div>
-
-    <h2>
-        <span><span data-i18n="t_title">📺 M3U Editor Pro Elite</span> 
-		<button class="btn btn-primary" style="display:inline-flex; padding: 5px 10px; font-size: 12px; margin-left: 10px;" onclick="mostrarInfoSitio()">ℹ️ Info</button>
-		<button class="btn btn-primary" style="display:inline-flex; padding: 5px 10px; font-size: 12px; margin-left: 10px;" onclick="mostrarContacto()">📩 Contact</button></span>
-		<button class="btn btn-secondary" onclick="procesarLista()" data-i18n="t_cargar">🔄 Cargar M3U</button>
-    </h2>   
-    
-    <div class="stats-bar">
-        <div class="stat-item"><span data-i18n="t_total">Total</span>: <b class="statTotal">0</b></div>
-        <div class="stat-item"><span data-i18n="t_online">🟢 Online</span>: <b class="statOnline">0</b></div>
-        <div class="stat-item"><span data-i18n="t_offline">🔴 Offline</span>: <b class="statOffline">0</b></div>
-        <div class="stat-item"><span data-i18n="t_grupos">📂 Grupos</span>: <b class="statGroups">0</b></div>
+<noscript><p class='no-script'>M3U Editor Pro Elite necesita JavaScript para funcionar. / JavaScript is required.</p></noscript>
+<div class='container'>
+    <header class='app-header'>
+        <div class='brand'><span class='brand-mark' aria-hidden='true'>M3U</span><div><h1 data-i18n='t_title'>M3U Editor Pro Elite</h1><p>Standalone HTML Edition <span class='version-tag'>V2.0</span></p></div></div>
+        <div class='header-actions'>
+            <label><span data-i18n='t_language'>Idioma</span><select id='langSelect' onchange='cambiarIdioma(this.value)'><option value='es'>Español</option><option value='en'>English</option></select></label>
+            <label><span data-i18n='t_theme'>Tema</span><select id='themeSelect'><option value='dark' data-i18n='t_dark'>Oscuro</option><option value='light' data-i18n='t_light'>Claro</option><option value='auto' data-i18n='t_auto'>Sistema</option></select></label>
+            <label><span data-i18n='t_density'>Vista</span><select id='densitySelect'><option value='normal' data-i18n='t_normal'>Normal</option><option value='compact' data-i18n='t_compact'>Compacta</option></select></label>
+            <button class='btn btn-file' data-i18n='t_info' onclick='mostrarInfoSitio()'>Info</button>
+            <button class='btn btn-file' data-i18n='t_btn_contact' onclick='mostrarContacto()'>Contacto</button>
+        </div>
+    </header>
+    <div class='stats-bar'>
+        <div class='stat-item'><span data-i18n='t_total'>Total</span><b class='statTotal'>0</b></div>
+        <div class='stat-item'><span data-i18n='t_online'>🟢 Online</span><b class='statOnline'>0</b></div>
+        <div class='stat-item'><span data-i18n='t_offline'>🔴 Offline</span><b class='statOffline'>0</b></div>
+            <div class='stat-item'><span data-i18n='t_unknown'>No verificable</span><b class='statUnknown'>0</b></div>
+            <div class='stat-item'><span data-i18n='t_unchecked'>Sin verificar</span><b class='statUnchecked'>0</b></div>
+            <div class='stat-item'><span data-i18n='t_checking'>Verificando</span><b class='statChecking'>0</b></div>
+        <div class='stat-item'><span data-i18n='t_grupos'>📂 Grupos</span><b class='statGroups'>0</b></div>
     </div>   
     
-    <div class="toolbar">
-        <input type="file" id="fileInput" accept=".m3u,.txt" style="display:none"/>
-        <button class="btn btn-file" onclick="document.getElementById('fileInput').click()" data-i18n="t_abrir">📂 Abrir Archivo</button>
-        <button class="btn btn-secondary" onclick="exportarM3U()" data-i18n="t_guardar_m3u">💾 Guardar .m3u</button>
-        <button class="btn btn-primary" onclick="ordenarAlfabeticamente()" data-i18n="t_ordenar">🔤 Ordenar A-Z</button>
-        <button class="btn btn-success" onclick="limpiarSintaxis()" data-i18n="t_autofix">✨ Auto-Fix</button>
-        <button class="btn btn-warning" onclick="extraerEnlaces()" data-i18n="t_extraer">🔗 Extraer URLs</button>
-        <button class="btn btn-danger" onclick="confirmarAccionReset()" data-i18n="t_reset">🗑️ Reset</button>
+    <div class='toolbar'>
+        <input accept='.m3u,.m3u8,.txt' id='fileInput' multiple='multiple' style='display:none' type='file'/>
+        <button class='btn btn-file' data-i18n='t_abrir' onclick='document.getElementById(&apos;fileInput&apos;).click()'>📂 Abrir Archivo</button>
+        <button class='btn btn-secondary' data-i18n='t_guardar_m3u' onclick='exportarM3U()'>💾 Guardar .m3u</button>
+        <button class='btn btn-primary' data-i18n='t_ordenar' onclick='ordenarAlfabeticamente()'>🔤 Ordenar A-Z</button>
+        <button class='btn btn-success' data-i18n='t_autofix' onclick='limpiarSintaxis()'>&#10024; Auto-Fix</button>
+        <button class='btn btn-warning' data-i18n='t_extraer' onclick='extraerEnlaces()'>🔗 Extraer URLs</button>
+        <button class='btn btn-file' data-i18n='t_undo' id='btnUndo' disabled='disabled' onclick='undoLast()'>Deshacer</button>
+        <button class='btn btn-file' data-i18n='t_redo' id='btnRedo' disabled='disabled' onclick='redoLast()'>Rehacer</button>
+        <button class='btn btn-danger' data-i18n='t_reset' onclick='confirmarAccionReset()'>🗑&#65039; Reset</button>
     </div>
 
-    <div class="input-form">
-        <input type="hidden" id="editIndex" value="-1"/>
-        <div class="form-group"><label data-i18n="t_tvgid">TVG-ID</label><input type="text" id="tvgId" placeholder="Discovery.es"/></div>
-        <div class="form-group"><label data-i18n="t_tvglogo">TVG-LOGO</label><input type="text" id="tvgLogo" placeholder="URL Imagen"/></div>
-        <div class="form-group"><label data-i18n="t_cat">Categoría</label><input type="text" id="groupTitle" placeholder="General"/></div>
-        <div class="form-group"><label data-i18n="t_nom">Nombre Canal</label><input type="text" id="channelName"/></div>
-        <div class="form-group full-width"><label data-i18n="t_url">URL Stream</label><input type="text" id="streamUrl"/></div>
-        <div style="grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 10px;">
-            <button class="btn btn-primary" id="btnGuardar" style="flex: 2;" onclick="agregarOEditarCanal()" data-i18n="t_btn_save">➕ Guardar Canal</button>
-            <button class="btn btn-secondary" style="flex: 1;" onclick="removerDuplicados()" data-i18n="t_btn_dup">🚫 Quitar Duplicados</button>
-        </div>
-    </div>
-    <div id="channelManager">
-        <div class="stats-bar">
-            <div class="stat-item"><span data-i18n="t_total">Total</span>: <b class="statTotal">0</b></div>
-            <div class="stat-item"><span data-i18n="t_online">🟢 Online</span>: <b class="statOnline">0</b></div>
-            <div class="stat-item"><span data-i18n="t_offline">🔴 Offline</span>: <b class="statOffline">0</b></div>
-            <div class="stat-item"><span data-i18n="t_grupos">📂 Grupos</span>: <b class="statGroups">0</b></div>
-        </div>
-
-        <input type="text" id="searchInput" class="search-box" placeholder="🔍 Buscar canales o grupos..." data-i18n="t_buscar" onkeyup="filtrarCanales()"/>
+    <div id='historySummary' class='advanced-summary' role='status'></div>
+    <div class='workspace'>
+      <aside class='group-sidebar' aria-labelledby='groupHeading'>
+        <h2 id='groupHeading' data-i18n='t_categories'>Categorías</h2>
+        <button class='group-button' id='sidebarAll' aria-pressed='true'><span data-i18n='t_all_channels'>Todos los canales</span><b id='sidebarTotal'>0</b></button>
+        <label class='advanced-field'><span data-i18n='t_find_group'>Buscar categoría</span><input id='sidebarSearch' type='search' autocomplete='off'/></label>
+        <div id='sidebarGroups'></div>
+        <div class='sidebar-pager'><button class='btn btn-file' id='groupPrev' data-i18n='t_prev'>Anterior</button><span id='groupPage' role='status'></span><button class='btn btn-file' id='groupNext' data-i18n='t_next'>Siguiente</button></div>
+        <button class='btn btn-file' id='btnGroups' onclick='manageGroups()' data-i18n='t_manage_groups'>Gestionar grupos</button>
+      </aside>
+      <main id='channelManager' aria-labelledby='channelsHeading'>
+        <div class='section-heading'><h2 id='channelsHeading' data-i18n='t_channels'>Canales</h2><button class='btn btn-primary' id='newChannel' data-i18n='t_new_channel'>Nuevo canal</button><button class='btn btn-file' id='jumpSource' data-i18n='t_source'>Texto M3U</button></div>
+        <input class='search-box' data-i18n='t_buscar' id='searchInput' aria-label='Buscar canales' oninput='filtrarCanales()' placeholder='🔍 Buscar canales o grupos...' type='text'/>
         
-        <div style="margin-bottom: 15px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center;">
-            <button class="btn btn-success" id="btnCheck" onclick="verificarTodosLosEstados()" data-i18n="t_test">⚡ Test de Estado</button>
-            <button class="btn btn-danger" onclick="eliminarOffline()" data-i18n="t_borrar_off">🗑️ Borrar Offline</button>
-            <button class="btn btn-file" onclick="toggleSeleccionarTodos()" data-i18n="t_sel">✅ Selec. Visibles</button>
-            <button class="btn btn-danger" onclick="eliminarSeleccionados()" data-i18n="t_borrar_sel">❌ Borrar Seleccionados</button>
-            <button class="btn btn-primary" onclick="moverVariosAGrupo()" data-i18n="t_mover">📁 Mover a Grupo</button>
+        <div class='advanced-tools'>
+            <label class='advanced-field'><span data-i18n='t_group_filter'>Grupo exacto (vacío = todos)</span><input id='groupFilter' list='groupSuggestions' type='text'/></label>
+            <datalist id='groupSuggestions'></datalist>
+            <label class='advanced-check'><input id='emptyGroupFilter' type='checkbox'/><span data-i18n='t_empty_group'>Solo grupo vacío</span></label>
+            <button class='btn btn-file' id='clearGroupFilter' data-i18n='t_clear_group'>Todos los grupos</button>
+            <button class='btn btn-primary' id='btnReplace' onclick='replaceDialog()' data-i18n='t_replace'>Buscar y reemplazar</button>
+            <button class='btn btn-secondary' id='btnExportSubset' onclick='exportSubset()' data-i18n='t_subset'>Exportar selección / filtro</button>
+        </div>
+        <div class='channel-actions'>
+            <button class='btn btn-success' data-i18n='t_test' id='btnCheck' onclick='verificarTodosLosEstados()'>&#9889; Test de Estado</button>
+            <button class='btn btn-file' id='btnStop' disabled='disabled' data-i18n='t_stop' onclick='stopChecking()'>Detener prueba</button>
+            <button class='btn btn-danger' data-i18n='t_borrar_off' onclick='eliminarOffline()'>🗑&#65039; Borrar Offline</button>
+            <button class='btn btn-file' data-i18n='t_sel' onclick='toggleSeleccionarTodos()'>&#9989; Selec. Visibles</button>
+            <button class='btn btn-danger' data-i18n='t_borrar_sel' onclick='eliminarSeleccionados()'>&#10060; Borrar Seleccionados</button>
+            <button class='btn btn-primary' data-i18n='t_mover' onclick='moveSelectedAdvanced()'>📁 Mover a Grupo</button>
         </div>
 
-        <div class="progress-container" id="progCont"><div class="progress-bar" id="progBar"></div></div>
-        <div class="channel-list" id="channelList"></div>
+        <p class='privacy-note' data-i18n='t_http_privacy'>La prueba HTTP contacta los servidores de los canales seleccionados por el filtro; pueden recibir tu IP y la URL solicitada. No comprueba la reproducción.</p>
+        <div class='progress-container' id='progCont' role='progressbar' aria-label='HTTP test' aria-valuemin='0' aria-valuemax='100' aria-valuenow='0'><div class='progress-bar' id='progBar'></div></div>
+        <div id='parseStatus' role='status'></div>
+        <p id='parserNotice' role='status'></p>
+        <div class='pager'>
+            <label for='pageSize' data-i18n='t_page_size'>Canales por página</label>
+            <select id='pageSize'><option value='50'>50</option><option value='100' selected='selected'>100</option><option value='250'>250</option></select>
+            <button class='btn btn-file' id='pagePrev' data-i18n='t_prev'>Anterior</button>
+            <span id='pageSummary' role='status'></span>
+            <button class='btn btn-file' id='pageNext' data-i18n='t_next'>Siguiente</button>
+        </div>
+        <div class='pager'><span id='selectionSummary'></span><button class='btn btn-file' id='clearSelection' data-i18n='t_clear_sel'>Limpiar selección</button></div>
+        <div class='channel-list' id='channelList'></div>
+        <p id='emptyChannels' role='status'></p>
+      </main>
     </div>
+    <section class='editor-section' id='editorSection' aria-labelledby='editorHeading'><div class='section-heading'><h2 id='editorHeading' data-i18n='t_channel_editor'>Editor de canal</h2><button class='btn btn-file' id='backFromEditor' data-i18n='t_back_channels'>Volver a canales</button></div>
+    <div class='input-form'>
+        <input id='editIndex' type='hidden' value='-1'/>
+        <div class='form-group'><label for='tvgId' data-i18n='t_tvgid'>TVG-ID</label><input id='tvgId' placeholder='Discovery.es' type='text'/></div>
+        <div class='form-group'><label for='tvgLogo' data-i18n='t_tvglogo'>TVG-LOGO</label><input id='tvgLogo' placeholder='URL Imagen' type='text'/></div>
+        <div class='form-group'><label for='groupTitle' data-i18n='t_cat'>Categoría</label><input id='groupTitle' placeholder='General' type='text'/></div>
+        <div class='form-group'><label for='channelName' data-i18n='t_nom'>Nombre Canal</label><input id='channelName' type='text'/></div>
+        <div class='form-group full-width'><label for='streamUrl' data-i18n='t_url'>URL Stream</label><input id='streamUrl' type='text'/></div>
+        <div style='grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 10px;'>
+            <button class='btn btn-primary' data-i18n='t_btn_save' id='btnGuardar' onclick='agregarOEditarCanal()' style='flex: 2;'>&#10133; Guardar Canal</button>
+            <button class='btn btn-file' data-i18n='t_cancel_edit' onclick='resetForm()'>Cancelar edición</button>
+            <button class='btn btn-secondary' data-i18n='t_btn_dup' onclick='removerDuplicados()' style='flex: 1;'>🚫 Quitar Duplicados</button>
+        </div>
+    </div>
+
+    </section>
+    <section class='editor-section' id='sourceSection' aria-labelledby='sourceHeading'>
+      <div class='section-heading'><h2 id='sourceHeading' data-i18n='t_source'>Texto M3U</h2><button class='btn btn-file' id='backFromSource' data-i18n='t_back_channels'>Volver a canales</button><button class='btn btn-primary' data-i18n='t_cargar' onclick='loadManual()'>Cargar M3U</button></div>
+    <textarea id='m3uContent' aria-label='M3U' spellcheck='false' placeholder='#EXTM3U...'></textarea>
+    <div class='backup-row'><label><input id='backupEnabled' type='checkbox'/> <span data-i18n='t_backup'>Respaldo local</span></label><small id='backupStatus'></small></div>
+
+    </section>
 </div>
 
-<footer style="margin-top: 30px; padding: 20px; text-align: center; border-top: 1px solid var(--border); font-size: 13px; color: #666;">
-    <p>© <span id="year">2026</span> | M3U Editor Pro Elite</p>    
-    <p><span data-i18n="t_dev">Desarrollado con ❤️ por</span> <span id="author-credit"><b style="color: #607d8b;">RavenBreeder</b></span><i class="fas fa-crow raven-icon"></i></p>   
-    <p style='font-family: sans-serif; font-size: 14px;'>
+<footer class='app-footer'>
+    <div style='margin-bottom: 15px;'>
+        <a href='https://buymeacoffee.com/ravenbreeder' class='btn donation-link' target='_blank' rel='noopener noreferrer' data-i18n='t_cafe'>
+                &#9749; &#161;Invítame un café!
+        </a>
+    </div>
+
+    <p>&#169; <span id='year'>2026</span> | M3U Editor Pro Elite V2.0</p>    
+    <p><span data-i18n='t_dev'>Desarrollado con &#10084;&#65039; por</span> <span id='author-credit'><b style='color: #607d8b;'>RavenBreeder</b></span><span class='raven-icon' aria-hidden='true'>&#128038;</span></p>   
+<p style='font-family: sans-serif; font-size: 14px;'>
     <span data-i18n='footerText'>🔓 Proyecto de Código Abierto - Revisa el código en</span>
-    <a href='https://github.com/RavenBreeder/m3u-editor-pro-elite' style='color: #007bff; text-decoration: none; margin-left: 5px;' target='_blank'>
-        <i class='fab fa-github'/> GitHub
+    <a href='https://github.com/RavenBreeder/m3u-editor-pro-elite' class='repo-link' target='_blank' rel='noopener noreferrer'>
+        GitHub
     </a>
 </p>
+    <p><a href="https://m3ueditorpro.blogspot.com/" target="_blank" rel="noopener noreferrer">m3ueditorpro.blogspot.com</a> · HTML Standalone</p>
 </footer>
 
 <script type='text/javascript'>
 const i18n = {
         es: {
+            t_redo: "Rehacer",
+            t_group_filter: "Grupo exacto (vacío = todos)",
+            t_empty_group: "Solo grupo vacío",
+            t_clear_group: "Todos los grupos",
+            t_manage_groups: "Gestionar grupos",
+            t_replace: "Buscar y reemplazar",
+            t_subset: "Exportar selección / filtro",
+
             t_title: "📺 M3U Editor Pro Elite",
             t_cargar: "🔄 Cargar M3U",
             t_total: "Total",
-            t_online: "🟢 Online",
-            t_offline: "🔴 Offline",
+            t_online: "🟢 HTTP OK",
+            t_offline: "🔴 404/410",
             t_grupos: "📂 Grupos",
             t_abrir: "📂 Abrir Archivo",
             t_guardar_m3u: "💾 Guardar .m3u",
@@ -193,15 +206,15 @@ const i18n = {
             info_desc: "<b>M3U Editor Pro Elite</b> es una herramienta avanzada para la gestión y limpieza de listas de reproducción IPTV.",
             info_f_title: "🚀 Funciones Principales:",
             info_f_load: "<b>Cargar M3U:</b> Renderiza el texto del área inferior en la lista visual.",
-            info_f_test: "<b>Test de Estado:</b> Verifica en tiempo real si los enlaces están activos (Online) o caídos (Offline).",
-            info_f_fix: "<b>Auto-Fix:</b> Repara errores de sintaxis y elimina líneas vacías innecesarias.",
-            info_f_ext: "<b>Extraer URLs:</b> Escanea cualquier texto sucio y rescata solo los enlaces de streaming válidos.",
+            info_f_test: "<b>Test de Estado:</b> Comprueba respuestas HTTP visibles. CORS, errores de red y otros códigos se muestran como no verificables. No garantiza reproducción.",
+            info_f_fix: "<b>Auto-Fix:</b> Normaliza el encabezado sin borrar directivas ni entradas no reconocidas.",
+            info_f_ext: "<b>Extraer URLs:</b> Escanea cualquier texto sucio y extrae URLs HTTP(S), incluyendo posibles logos y EPG.",
             info_f_dup: "<b>Quitar Duplicados:</b> Limpia la lista de enlaces repetidos automáticamente.",
             info_t_title: "💡 Tips de Uso:",
             info_t_edit: "Puedes editar canales individualmente usando el icono ✏️.",
             info_t_move: "Usa 'Mover a Grupo' para organizar varios canales a la vez.",
-            info_t_back: "El sistema guarda un <b>respaldo automático</b> en tu navegador por si cierras la pestaña por error.",
-            info_version: "Versión 1.0 - Editor Profesional de alto rendimiento.",
+            info_t_back: "Puedes activar un <b>respaldo local</b> opcional; puede contener credenciales. Exporta tus listas importantes.",
+            info_version: "Versión 2.0 — Edición HTML independiente. Se puede abrir como archivo local; las funciones de red requieren conexión. El almacenamiento local depende del navegador. Panel de categorías, temas y vista compacta. Gestiona grupos, reemplaza campos, importa varios archivos y exporta selecciones. Historial de hasta 20 cambios, limitado a 64 MiB de texto en memoria. Las pruebas HTTP y la selección abarcan todos los resultados filtrados. Las redirecciones y restricciones CORS son no verificables; una respuesta HTTP no garantiza reproducción.",
 			t_dev: "Desarrollado con ❤️ por",
 			t_powered: "Potenciado por Elite Stream Technology",
 			t_footer_text: "Editor Profesional de alto rendimiento",
@@ -216,11 +229,19 @@ const i18n = {
 			footerText: "🔓 Proyecto de Código Abierto - Revisa el código en"
         },
         en: {
+            t_redo: "Redo",
+            t_group_filter: "Exact group (blank = all)",
+            t_empty_group: "Empty group only",
+            t_clear_group: "All groups",
+            t_manage_groups: "Manage groups",
+            t_replace: "Find and replace",
+            t_subset: "Export selection / filter",
+
             t_title: "📺 M3U Editor Pro Elite",
             t_cargar: "🔄 Load M3U",
             t_total: "Total",
-            t_online: "🟢 Online",
-            t_offline: "🔴 Offline",
+            t_online: "🟢 HTTP OK",
+            t_offline: "🔴 404/410",
             t_grupos: "📂 Groups",
             t_abrir: "📂 Open File",
             t_guardar_m3u: "💾 Save .m3u",
@@ -254,15 +275,15 @@ const i18n = {
             info_desc: "<b>M3U Editor Pro Elite</b> is an advanced tool for managing and cleaning IPTV playlists.",
             info_f_title: "🚀 Main Functions:",
             info_f_load: "<b>Load M3U:</b> Renders the text from the bottom area into the visual list.",
-            info_f_test: "<b>Status Test:</b> Real-time check to see if links are active (Online) or broken (Offline).",
-            info_f_fix: "<b>Auto-Fix:</b> Repairs syntax errors and removes unnecessary empty lines.",
-            info_f_ext: "<b>Extract URLs:</b> Scans any raw text and rescues only valid streaming links.",
+            info_f_test: "<b>Status Test:</b> Checks observable HTTP responses. CORS, network errors and other codes are unverifiable. Playback is not guaranteed.",
+            info_f_fix: "<b>Auto-Fix:</b> Normalizes the header without deleting directives or unrecognized entries.",
+            info_f_ext: "<b>Extract URLs:</b> Scans any raw text and extracts HTTP(S) URLs, including possible logos and EPG.",
             info_f_dup: "<b>Remove Duplicates:</b> Automatically cleans the list of repeated links.",
             info_t_title: "💡 Usage Tips:",
             info_t_edit: "You can edit channels individually using the ✏️ icon.",
             info_t_move: "Use 'Move to Group' to organize several channels at once.",
-            info_t_back: "The system saves an <b>automatic backup</b> in your browser in case you close the tab by mistake.",
-            info_version: "Version 1.0 - High-performance Professional Editor.",
+            info_t_back: "You can enable an optional <b>local backup</b>; it may contain credentials. Export important playlists.",
+            info_version: "Version 2.0 — Standalone HTML Edition. Open as a local file; network features require a connection. Local storage depends on the browser. Category sidebar, themes and compact view. Manage groups, replace fields, import multiple files and export selections. History holds up to 20 changes, with a 64 MiB in-memory text limit. HTTP tests and selection cover all filtered results. Redirects and CORS restrictions are unverifiable; HTTP responses do not guarantee playback.",
 			t_dev: "Developed with ❤️ by",
 			t_powered: "Powered by Elite Stream Technology",
 			t_footer_text: "High-performance Professional Editor",
@@ -278,398 +299,353 @@ const i18n = {
         }
     };
 
-    let currentLang = localStorage.getItem('m3u_lang') || 'es';
 
-function cambiarIdioma(lang) {
-    currentLang = lang;
-    localStorage.setItem('m3u_lang', lang);
-    const selector = document.getElementById('langSelect');
-    if (selector) selector.value = lang;
-
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        const translation = i18n[lang][key];
-        if (translation) {
-            if (el.hasAttribute('placeholder')) {
-                el.setAttribute('placeholder', translation);
-            } else {
-                el.innerText = translation;
-            }
+Object.assign(i18n.es,{t_unknown:'🟠 No verificable',t_unchecked:'Sin verificar',t_checking:'Verificando',t_stop:'Detener prueba',t_undo:'↶ Deshacer',t_backup:'Respaldo local',t_cancel_edit:'Cancelar edición',t_info:'ℹ️ Info',t_test:'⚡ Test HTTP',t_borrar_off:'🗑️ Borrar 404/410'});
+Object.assign(i18n.en,{t_unknown:'🟠 Unverifiable',t_unchecked:'Unchecked',t_checking:'Checking',t_stop:'Stop test',t_undo:'↶ Undo',t_backup:'Local backup',t_cancel_edit:'Cancel edit',t_info:'ℹ️ Info',t_test:'⚡ HTTP test',t_borrar_off:'🗑️ Delete 404/410'});
+// Standalone edition: no hosting-domain restriction; author credit retained.
+// V1.3: loss-aware M3U model. No HTML or network access in this module.
+function createM3UEngine() {
+    const extinf = s => /^#EXTINF\s*:/i.test(s.trim());
+    const header = s => /^#EXTM3U(?:\s|$)/i.test(s.trim());
+    const splitInfo = s => {
+        let quote = '';
+        for (let i = 0; i < s.length; i++) {
+            const c = s[i];
+            if (quote) { if (c === quote) quote = ''; }
+            else if ((c === '"' || c === "'") && /=\s*$/.test(s.slice(0,i))) quote = c;
+            else if (c === ',') return [s.slice(0, i), s.slice(i + 1)];
         }
-    });
-
-    const btnSave = document.getElementById('btnGuardar');
-    if (btnSave) {
-        const isEdit = document.getElementById('editIndex').value !== "-1";
-        btnSave.innerText = isEdit ? i18n[lang].t_btn_save_upd : i18n[lang].t_btn_save;
-    }
-}
-
-    const textArea = document.getElementById('m3uContent');
-    const channelListDiv = document.getElementById('channelList');
-    const DEFAULT_LOGO = "https://i.imgur.com/dw6puHC.png";
-    let canalesData = [];
-
-document.addEventListener('DOMContentLoaded', () => {
-    const yearEl = document.getElementById('year');
-    if(yearEl) yearEl.textContent = new Date().getFullYear();
-    
-    const browserLang = navigator.language || navigator.userLanguage;
-    const detectedLang = browserLang.startsWith('en') ? 'en' : 'es';
-    
-    currentLang = localStorage.getItem('m3u_lang') || detectedLang;
-    
-    setTimeout(() => {
-        cambiarIdioma(currentLang);
-    }, 150); 
-
-    if (!localStorage.getItem('m3u_lang')) {
-        const msg = currentLang === 'en' ? "Language: English" : "Idioma: Español";
-        if(typeof notify === "function") notify(msg);
-    }
-});
-
-function confirmarAccion(msg, callbackSi, callbackNo) {
-    const modal = document.getElementById('customModal');
-    const lang = i18n[currentLang];
-    
-    document.getElementById('modalMsg').innerText = msg;
-    const actions = document.getElementById('modalActions');
-    
-    const txtConfirmar = currentLang === 'es' ? "Aceptar" : "Accept";
-    const txtCancelar = currentLang === 'es' ? "Cancelar" : "Cancel";
-    
-    actions.innerHTML = `
-        <button class="btn btn-file" id="modalCancelBtn">${txtCancelar}</button>
-        <button class="btn btn-primary" id="modalConfirmBtn" style="margin-left:10px;">${txtConfirmar}</button>
-    `;
-    
-    modal.style.display = 'flex';
-
-    document.getElementById('modalConfirmBtn').onclick = () => { 
-        if(callbackSi) callbackSi(); 
-        closeModal(); 
+        return [s, ''];
     };
-
-    document.getElementById('modalCancelBtn').onclick = () => { 
-        if(callbackNo) callbackNo(); 
-        closeModal(); 
+    const attrs = s => {
+        const a = Object.create(null);
+        const re = /(?:^|\s)([\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s]+))/g;
+        let m;
+        while ((m = re.exec(splitInfo(s)[0]))) a[m[1].toLowerCase()] = m[2] ?? m[3] ?? m[4];
+        return a;
     };
-}
-
-function saveToLocal() { 
-    localStorage.setItem('m3u_backup', textArea.value); 
-}
-
-window.onload = () => {
-    const savedLang = localStorage.getItem('m3u_lang') || 'es';
-    cambiarIdioma(savedLang);
-
-    const backup = localStorage.getItem('m3u_backup');
-    const lang = i18n[currentLang];
-
-    if (backup && backup.trim().length > 20) {
-        confirmarAccion(
-            lang.msg_recuperada, 
-            () => { 
-                textArea.value = backup;
-                procesarLista();
-                setTimeout(() => {
-                    notify(currentLang === 'es' ? "✅ Lista restaurada" : "✅ Playlist restored");
-                }, 500);
-            },
-            () => {
-                localStorage.removeItem('m3u_backup');
-                textArea.value = ""; 
-                notify(currentLang === 'es' ? "🗑️ Memoria limpiada" : "🗑️ Memory cleared");
-            }
-        );
+    const urlLine = s => /^(?:[a-z][a-z0-9+.-]*:\/\/|(?:\.\.?\/|\/))\S+$/i.test(s) || /^[^#\s]+\.[a-z0-9]{1,8}(?:[?#][^\s]*)?$/i.test(s);
+    function parse(raw) {
+        const lines = raw.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n');
+        const hls = lines.some(l => /^#EXT-X-/i.test(l.trim()));
+        const blocks = [], channels = []; let invalid = 0;
+        let pending = []; let headerCount=0;
+        const rawBlock = ls => { if (ls.length) blocks.push({raw:ls}); };
+        const make = (ls, infoIndex, urlIndex) => {
+            const info = infoIndex < 0 ? '' : ls[infoIndex].trim();
+            const url = ls[urlIndex].trim(); const a = attrs(info);
+            const groupDirective = ls.find(l => /^#EXTGRP:/i.test(l.trim()));
+            const c = {lines:ls, infoIndex, urlIndex, info, url,
+                nombre:splitInfo(info)[1].trim() || url,
+                grupo:a['group-title'] ?? (groupDirective ? groupDirective.trim().slice(8).trim() : 'General'),
+                status:'unchecked', detail:'', selected:false};
+            blocks.push({channel:c}); channels.push(c);
+        };
+        if (hls) return {blocks:[{raw:lines}], channels, invalid:0, hls:true};
+        for (let i = 0; i < lines.length;) {
+            const s = lines[i].trim();
+            if (header(s)) { if(++headerCount>1)invalid++; rawBlock(pending); pending=[]; rawBlock([lines[i++]]); continue; }
+            if (extinf(s)) {
+                const ls = pending; pending=[]; const ii = ls.length; ls.push(lines[i++]);
+                while (i < lines.length && !extinf(lines[i]) && !header(lines[i])) {
+                    const t=lines[i].trim();
+                    if (t && !t.startsWith('#')) break;
+                    ls.push(lines[i++]);
+                }
+                if (i < lines.length && urlLine(lines[i].trim())) { ls.push(lines[i++]); if(splitInfo(ls[ii].trim())[0]===ls[ii].trim()){invalid++;rawBlock(ls);}else make(ls,ii,ls.length-1); }
+                else { invalid++; rawBlock(ls); }
+            } else if (urlLine(s)) {
+                const ls=pending; pending=[]; ls.push(lines[i++]); make(ls,-1,ls.length-1);
+            } else if (!s || s.startsWith('#')) { pending.push(lines[i++]); }
+            else { rawBlock(pending); pending=[]; rawBlock([lines[i++]]); invalid++; }
+        }
+        rawBlock(pending);
+        return {blocks,channels,invalid,hls:false};
     }
-};
+    function serialize(model, channels) {
+        const out=[]; let pos=0;
+        // Keep unrecognized blocks in their original slots; only replace channel slots.
+        const last = model.blocks.reduce((a,b,i)=>b.channel?i:a,-1);
+        let inserted=false;
+        model.blocks.forEach((b,i)=>{
+            if (b.channel) { if (pos<channels.length) channels[pos++].lines.forEach(l=>out.push(l)); }
+            else b.raw.forEach(l=>out.push(l));
+            if (i===last) { while(pos<channels.length) channels[pos++].lines.forEach(l=>out.push(l)); inserted=true; }
+        });
+        if (!inserted) while(pos<channels.length) channels[pos++].lines.forEach(l=>out.push(l));
+        if (!out.some(header) && channels.length) out.unshift('#EXTM3U');
+        return out.join('\n');
+    }
+    function setAttr(prefix,key,val) {
+        const re = /(?:^|\s)([\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s]+))/g;
+        let m, matches=[];
+        while ((m=re.exec(prefix))) if(m[1].toLowerCase()===key) matches.push({start:m.index,end:re.lastIndex,space:m[0].match(/^\s*/)[0]});
+        if(matches.length){for(let i=matches.length-1;i>=0;i--){const x=matches[i];prefix=prefix.slice(0,x.start)+x.space+key+'="'+val+'"'+prefix.slice(x.end);}return prefix;}
+        return prefix+' '+key+'="'+val+'"';
+    }
+    function update(c, fields) {
+        const copy = {...c, lines:c.lines.slice()};
+        let [prefix,name] = splitInfo(c.info || '#EXTINF:-1,');
+        for (const [key,val] of Object.entries(fields.attrs || {})) prefix=setAttr(prefix,key,val);
+        const info = prefix+','+(fields.name ?? name);
+        if (copy.infoIndex<0) { copy.infoIndex=copy.urlIndex; copy.lines.splice(copy.urlIndex,0,info); copy.urlIndex++; }
+        else copy.lines[copy.infoIndex]=info;
+        if (fields.url !== undefined) copy.lines[copy.urlIndex]=fields.url;
+        if (fields.attrs && Object.hasOwn(fields.attrs,'group-title')) {
+            copy.lines=copy.lines.map(l=>/^#EXTGRP:/i.test(l.trim())?'#EXTGRP:'+fields.attrs['group-title']:l);
+        }
+        copy.info=info; copy.nombre=fields.name ?? c.nombre; copy.grupo=fields.attrs?.['group-title'] ?? c.grupo;
+        copy.url=fields.url ?? c.url;
+        if (copy.url!==c.url) { copy.status='unchecked'; copy.detail=''; }
+        return copy;
+    }
+    return {parse,serialize,attrs,splitInfo,update,urlLine,header};
+}
+const M3U = createM3UEngine();
+// V1.3 UI: preserve original Blogger presentation and existing controls.
+const $ = id => document.getElementById(id);
+const tr = (es,en) => currentLang==='en'?en:es;
+const storage = {get(k){try{return localStorage.getItem(k);}catch{return null;}}, set(k,v){try{localStorage.setItem(k,v);return true;}catch{return false;}}, del(k){try{localStorage.removeItem(k);return true;}catch{return false;}}};
+let currentLang = storage.get('m3u_lang') || ((navigator.language||'es').startsWith('en')?'en':'es');
+if (!i18n[currentLang]) currentLang='es';
+const textArea=$('m3uContent'), channelListDiv=$('channelList');
+const DEFAULT_LOGO='https://i.imgur.com/dw6puHC.png';
+let model=M3U.parse(''), canalesData=model.channels, loadedText='', activeTest=null, backupTimer=null, importTicket=0, recovering=false;
+Object.assign(i18n.es,{t_page_size:'Canales por página',t_prev:'Anterior',t_next:'Siguiente',t_clear_sel:'Limpiar selección',t_sel:'Seleccionar filtrados'});
+Object.assign(i18n.en,{t_page_size:'Channels per page',t_prev:'Previous',t_next:'Next',t_clear_sel:'Clear selection',t_sel:'Select filtered'});
+let pageIndex=0, filtered=[], visibleRows=new Map(), searchTimer=null, parseJob=null, parseEpoch=0, selectedCount=0, statsTimer=null;
+let counts={Total:0,Groups:0,Online:0,Offline:0,Unknown:0,Unchecked:0,Checking:0};
+const statKey={online:'Online',offline:'Offline',unknown:'Unknown',unchecked:'Unchecked',checking:'Checking'};
+const statNodes=Object.fromEntries(Object.keys(counts).map(k=>[k,[...document.querySelectorAll('.stat'+k)]]));
+const statusLabels={unchecked:['Sin verificar','Unchecked'],checking:['Verificando','Checking'],online:['HTTP accesible','HTTP reachable'],offline:['No encontrado (404/410)','Not found (404/410)'],unknown:['No verificable','Unverifiable']};
+function statusLabel(s){return tr(...statusLabels[s]);}
+// V1.4: local appearance preferences and bounded category navigation.
+Object.assign(i18n.es,{t_language:'Idioma',t_theme:'Tema',t_dark:'Oscuro',t_light:'Claro',t_auto:'Sistema',t_density:'Vista',t_normal:'Normal',t_compact:'Compacta',t_categories:'Categorías',t_all_channels:'Todos los canales',t_find_group:'Buscar categoría',t_channels:'Canales',t_new_channel:'Nuevo canal',t_source:'Texto M3U',t_channel_editor:'Editor de canal',t_back_channels:'Volver a canales'});
+Object.assign(i18n.en,{t_language:'Language',t_theme:'Theme',t_dark:'Dark',t_light:'Light',t_auto:'System',t_density:'View',t_normal:'Normal',t_compact:'Compact',t_categories:'Categories',t_all_channels:'All channels',t_find_group:'Find category',t_channels:'Channels',t_new_channel:'New channel',t_source:'M3U text',t_channel_editor:'Channel editor',t_back_channels:'Back to channels'});
+let groupPageIndex=0,groupPageSize=30;
+const mediaTheme=window.matchMedia('(prefers-color-scheme: light)');
+function applyAppearance(){const theme=$('themeSelect').value;document.documentElement.dataset.theme=theme==='auto'?(mediaTheme.matches?'light':'dark'):theme;document.documentElement.dataset.density=$('densitySelect').value;}
+function refreshLabels(){$('searchInput').setAttribute('aria-label',tr('Buscar canales','Search channels'));$('progCont').setAttribute('aria-label',tr('Prueba HTTP','HTTP test'));$('groupPage').setAttribute('aria-label',tr('Página de categorías','Category page'));}
+function renderSidebar(){const term=$('sidebarSearch').value.toLowerCase();const items=[];for(const [g,n] of groupCounts){if((g||tr('(Vacío)','(Empty)')).toLowerCase().includes(term))items.push([g,n]);}const pages=Math.max(1,Math.ceil(items.length/groupPageSize));groupPageIndex=Math.min(Math.max(0,groupPageIndex),pages-1);const active=$('groupFilter').value,empty=$('emptyGroupFilter').checked;const all=!active&&!empty;$('sidebarAll').setAttribute('aria-pressed',String(all));$('sidebarTotal').textContent=canalesData.length;const f=document.createDocumentFragment();for(const [g,n] of items.slice(groupPageIndex*groupPageSize,(groupPageIndex+1)*groupPageSize)){const b=document.createElement('button');b.type='button';b.className='group-button';b.setAttribute('aria-pressed',String(g===''?empty:!empty&&active===g));const name=document.createElement('span');name.textContent=g||tr('(Vacío)','(Empty)');const count=document.createElement('b');count.textContent=n;b.append(name,count);b.onclick=()=>{ $('groupFilter').value=g;$('emptyGroupFilter').checked=g==='';rebuildFilter();const match=[...$('sidebarGroups').children].find(x=>x.getAttribute('aria-pressed')==='true');match?.focus();};f.append(b);}$('sidebarGroups').replaceChildren(f);$('groupPage').textContent=`${groupPageIndex+1}/${pages}`;$('groupPrev').disabled=groupPageIndex===0;$('groupNext').disabled=groupPageIndex>=pages-1;}
+function focusEditor(){$('editorSection').scrollIntoView({block:'start'});$('channelName').focus({preventScroll:true});}
+function setupInterface(){for(const id of ['backFromEditor','backFromSource'])$(id).onclick=()=>{$('channelManager').scrollIntoView({block:'start'});$('searchInput').focus({preventScroll:true});};const theme=storage.get('m3u_theme'),density=storage.get('m3u_density');$('themeSelect').value=['dark','light','auto'].includes(theme)?theme:'dark';$('densitySelect').value=density==='compact'?'compact':'normal';applyAppearance();$('themeSelect').onchange=()=>{storage.set('m3u_theme',$('themeSelect').value);applyAppearance();};$('densitySelect').onchange=()=>{storage.set('m3u_density',$('densitySelect').value);applyAppearance();};mediaTheme.addEventListener?.('change',applyAppearance);$('sidebarSearch').oninput=()=>{groupPageIndex=0;renderSidebar();};$('sidebarAll').onclick=()=>{$('clearGroupFilter').click();};$('groupPrev').onclick=()=>{groupPageIndex--;renderSidebar();};$('groupNext').onclick=()=>{groupPageIndex++;renderSidebar();};$('newChannel').onclick=()=>{if(guard()){resetForm();focusEditor();}};$('jumpSource').onclick=()=>{$('sourceSection').scrollIntoView({block:'start'});textArea.focus({preventScroll:true});};}
+
+function cambiarIdioma(lang){
+    currentLang=i18n[lang]?lang:'es'; storage.set('m3u_lang',currentLang); $('langSelect').value=currentLang;
+    document.documentElement.lang=currentLang;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{const v=i18n[currentLang][el.dataset.i18n];if(v){if(el.hasAttribute('placeholder'))el.placeholder=v;else el.textContent=v;}});
+    $('btnGuardar').textContent=i18n[currentLang][$('editIndex').value==='-1'?'t_btn_save':'t_btn_save_upd'];
+    updateNotice(); updateBackupLabel(); historyUI(); render(); renderSidebar(); refreshLabels(); if(parseJob) showParsing();
+}
+function notify(msg){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.append(t);setTimeout(()=>t.remove(),3500);}
+let modalFocus=null;
+document.addEventListener('keydown',e=>{if($('customModal').style.display!=='flex')return;if(e.key==='Escape'){e.preventDefault();$('modalActions').firstElementChild?.click();return;}if(e.key==='Tab'){const nodes=[...$('customModal').querySelectorAll('button,input,textarea,select,a[href]')].filter(n=>!n.disabled);if(!nodes.length)return;const first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+function closeModal(){ $('customModal').style.display='none'; if(modalFocus&&modalFocus.isConnected)modalFocus.focus();modalFocus=null; }
+function openModal(title,content,buttons){
+    modalFocus=document.activeElement;$('modalTitle').textContent=title;$('modalMsg').replaceChildren();$('modalActions').replaceChildren();
+    if(typeof content==='string')$('modalMsg').textContent=content;else $('modalMsg').append(content);
+    buttons.forEach(([label,cls,fn])=>{const b=document.createElement('button');b.type='button';b.className='btn '+cls;b.textContent=label;b.onclick=()=>{closeModal();if(fn)fn();};$('modalActions').append(b);});
+    $('customModal').style.display='flex';$('modalActions').firstElementChild?.focus();
+}
+function confirmarAccion(msg,yes,no){openModal(tr('Confirmación','Confirmation'),msg,[[tr('Cancelar','Cancel'),'btn-file',no],[tr('Aceptar','Accept'),'btn-primary',yes]]);}
+function customAlert(msg){openModal(tr('Aviso','Notice'),msg,[['OK','btn-primary']]);}
+function cancelTest(){if(!activeTest)return;const run=activeTest;activeTest=null;run.cancelled=true;run.controllers.forEach(c=>c.abort());canalesData.forEach(c=>{if(c.status==='checking')setStatus(c,'unchecked','');});$('btnCheck').disabled=false;$('btnStop').disabled=true;$('progCont').style.display='none';}
+function updateNotice(){
+    const dirty=textArea.value!==loadedText;
+    $('parserNotice').textContent=dirty?tr('Texto modificado. Pulsa Cargar M3U antes de editar o verificar.','Text changed. Load M3U before editing or checking.'):model.hls?tr('Manifiesto HLS detectado: edición de canales bloqueada para proteger su estructura. Puedes exportarlo sin cambios.','HLS manifest detected: channel editing disabled to protect its structure. You can export it unchanged.'):model.invalid?tr(`${model.invalid} bloque(s) no reconocidos; se conservan en el texto. Corrígelos antes de editar canales.`,`${model.invalid} unrecognized block(s); preserved in the text. Correct them before editing channels.`):'';
+}
+let backupQueue=Promise.resolve(), backupGeneration=0, dbPromise=null, backupPending=false;
+function openBackupDB(){
+    if(dbPromise)return dbPromise;
+    dbPromise=new Promise((resolve,reject)=>{let settled=false,req;const timer=setTimeout(()=>{settled=true;reject(Error('IndexedDB timeout'));},2500);
+        const fail=()=>{if(!settled){settled=true;clearTimeout(timer);reject(Error('IndexedDB unavailable'));}};
+        try{req=indexedDB.open('m3u_editor_pro_elite',1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('backup'))req.result.createObjectStore('backup');};req.onerror=fail;req.onblocked=fail;req.onsuccess=()=>{if(settled){req.result.close();return;}settled=true;clearTimeout(timer);const db=req.result;db.onversionchange=()=>{db.close();dbPromise=null;};resolve(db);};}catch{fail();}
+    }).catch(e=>{dbPromise=null;throw e;});return dbPromise;
+}
+async function backupDB(mode,action){const db=await openBackupDB();return new Promise((resolve,reject)=>{let tx,req;try{tx=db.transaction('backup',mode);req=action(tx.objectStore('backup'));tx.oncomplete=()=>resolve(req.result);tx.onerror=tx.onabort=()=>reject(tx.error||Error('Backup transaction failed'));}catch(e){reject(e);}});}
+function updateBackupLabel(){ $('backupStatus').textContent=$('backupEnabled').checked?tr('Respaldo local activado. Las listas pueden incluir credenciales.','Local backup enabled. Playlists may contain credentials.'):tr('Respaldo local desactivado. Exporta tu lista antes de cerrar.','Local backup disabled. Export your playlist before closing.'); }
+function saveToLocal(){
+    if(recovering||!$('backupEnabled').checked)return;
+    const generation=backupGeneration;backupPending=true;
+    // Queue only one pending snapshot; read the latest text when the write starts.
+    if(saveToLocal.queued===generation)return;
+    saveToLocal.queued=generation;
+    backupQueue=backupQueue.then(async()=>{if(saveToLocal.queued===generation)saveToLocal.queued=null;if(!backupPending||generation!==backupGeneration||!$('backupEnabled').checked)return;backupPending=false;const raw=textArea.value;
+        try{await backupDB('readwrite',store=>store.put(raw,'playlist'));const cleared=storage.del('m3u_backup');if(!cleared)throw Error('Legacy backup not cleared');if(generation===backupGeneration&&$('backupEnabled').checked)$('backupStatus').textContent=tr('Respaldo guardado en IndexedDB.','Backup saved in IndexedDB.');}
+        catch{const ok=storage.set('m3u_backup',raw);if(generation===backupGeneration&&$('backupEnabled').checked)$('backupStatus').textContent=ok?tr('Respaldo guardado en almacenamiento alternativo.','Backup saved in fallback storage.'):tr('No se pudo guardar el respaldo. Exporta el archivo.','Backup could not be saved. Export your file.');}
+    }).catch(()=>{});
+}
+function scheduleBackup(){clearTimeout(backupTimer);backupTimer=setTimeout(saveToLocal,500);}
+function clearBackup(){backupGeneration++;backupPending=false;clearTimeout(backupTimer);backupQueue=backupQueue.then(async()=>{const localOK=storage.del('m3u_backup');let dbOK=true;try{await backupDB('readwrite',store=>store.delete('playlist'));}catch{dbOK=false;}if(!localOK||!dbOK)notify(tr('No se pudo confirmar el borrado de todo el almacenamiento local.','Could not confirm deletion of all local storage.'));}).catch(()=>{});}
+
+// V1.3 advanced tools. All user-provided strings enter the DOM as text.
+const undoStack=[],redoStack=[];
+const HISTORY_LIMIT=20,HISTORY_BYTES=64*1024*1024;
+function historySize(){return [...undoStack,...redoStack].reduce((n,s)=>n+2*s.length,0);}
+function historyUI(){ $('btnUndo').disabled=!undoStack.length&&textArea.value===loadedText;$('btnRedo').disabled=!redoStack.length;$('historySummary').textContent=tr(`Historial: ${undoStack.length} atrás / ${redoStack.length} adelante`,`History: ${undoStack.length} undo / ${redoStack.length} redo`); }
+function historyPush(stack,raw){if(stack.at(-1)!==raw)stack.push(raw);while(stack.length>HISTORY_LIMIT)stack.shift();while(historySize()>HISTORY_BYTES){if(undoStack.length)undoStack.shift();else if(redoStack.length)redoStack.shift();else break;}}
+function remember(raw=textArea.value){redoStack.length=0;historyPush(undoStack,raw);historyUI();if(!undoStack.length)notify(tr('Cambio demasiado grande para guardar en el historial.','Change too large to keep in history.'));}
+function historyStep(from,to){if(!from.length)return;const raw=from.pop();historyPush(to,textArea.value);cancelTest();textArea.value=raw;procesarLista();historyUI();}
+function undoLast(){if(textArea.value!==loadedText&&!parseJob){historyPush(redoStack,textArea.value);textArea.value=loadedText;procesarLista();historyUI();return;}historyStep(undoStack,redoStack);}
+function redoLast(){historyStep(redoStack,undoStack);}
+function loadManual(){if(parseJob)return;if(textArea.value!==loadedText)remember(loadedText);procesarLista();}
+function updateGroups(){const map=new Map();for(const c of canalesData)map.set(c.grupo,(map.get(c.grupo)||0)+1);groupCounts=map;const dl=$('groupSuggestions');dl.replaceChildren();let i=0;for(const [g,n] of map){if(i++>=200)break;const o=document.createElement('option');o.value=g;o.label=String(n);dl.append(o);} }
+let groupCounts=new Map();
+function field(parent,label,kind,options=[]){const wrap=document.createElement('label');wrap.className='advanced-field';const caption=document.createElement('span');caption.textContent=label;const el=document.createElement(kind);if(kind==='select')for(const [v,t] of options){const o=document.createElement('option');o.value=v;o.textContent=t;el.append(o);}else el.type='text';wrap.append(caption,el);parent.append(wrap);return el;}
+function panel(text){const box=document.createElement('div');box.className='advanced-panel';const p=document.createElement('p');p.textContent=text;box.append(p);return box;}
+function sameModel(source){return guard()&&model===source;}
+function manageGroups(){if(!guard())return;const source=model;const box=panel(tr('Selecciona un grupo existente. Renombrar hacia un grupo existente los fusiona. Los grupos vacíos no se guardan en M3U.','Choose an existing group. Renaming to an existing group merges them. Empty groups are not stored in M3U.'));
+ const find=field(box,tr('Buscar grupo','Find group'),'input');const list=field(box,tr('Grupo (hasta 100 coincidencias)','Group (up to 100 matches)'),'select');const dest=field(box,tr('Nuevo nombre / destino','New name / destination'),'input');dest.setAttribute('list','groupSuggestions');
+ function refresh(){list.replaceChildren();let i=0;const q=find.value.toLowerCase();for(const [g,n] of groupCounts){if(!g.toLowerCase().includes(q))continue;if(i++>=100)break;const o=document.createElement('option');o.value=g;o.textContent=`${g||tr('(Vacío)','(Empty)')} (${n})`;list.append(o);}}find.oninput=refresh;refresh();if(groupCounts.has($('groupFilter').value)&&$('groupFilter').value){find.value=$('groupFilter').value;refresh();list.value=find.value;}
+ const rename=()=>{if(!sameModel(source)||list.selectedIndex<0)return;const old=list.value,g=dest.value.trim();if(!g||!safeField(g))return customAlert(tr('Nombre de grupo inválido.','Invalid group name.'));if(old===g)return;const n=groupCounts.get(old);confirmarAccion(tr(`Mover ${n} canales al grupo «${g}»?`,`Move ${n} channels to group “${g}”?`),()=>{if(!sameModel(source))return;if($('groupFilter').value===old&&old||old===''&&$('emptyGroupFilter').checked){$('groupFilter').value=g;$('emptyGroupFilter').checked=false;}commit(canalesData.map(c=>c.grupo===old?M3U.update(c,{attrs:{'group-title':g},name:c.nombre}):c));});};
+ const remove=()=>{if(!sameModel(source)||list.selectedIndex<0)return;const old=list.value;deleteWhere(c=>c.grupo===old,tr('¿Eliminar {n} canales de este grupo?','Delete {n} channels in this group?'));};
+ const filter=()=>{if(!sameModel(source)||list.selectedIndex<0)return;$('groupFilter').value=list.value;$('emptyGroupFilter').checked=list.value==='';rebuildFilter();};
+ openModal(tr('Administrador de grupos','Group manager'),box,[[tr('Cerrar','Close'),'btn-file'],[tr('Filtrar','Filter'),'btn-file',filter],[tr('Eliminar grupo','Delete group'),'btn-danger',remove],[tr('Renombrar / fusionar','Rename / merge'),'btn-primary',rename]]);
+}
+function moveSelectedAdvanced(){if(!guard()||!selectedCount)return;const source=model;const box=panel(tr(`Mover ${selectedCount} canales seleccionados. Escribe un grupo nuevo para crearlo.`,`Move ${selectedCount} selected channels. Type a new group to create it.`));const dest=field(box,tr('Grupo de destino','Destination group'),'input');dest.setAttribute('list','groupSuggestions');openModal(tr('Mover a grupo','Move to group'),box,[[tr('Cancelar','Cancel'),'btn-file'],[tr('Mover','Move'),'btn-primary',()=>{if(!sameModel(source))return;const g=dest.value.trim();if(!g||!safeField(g))return customAlert(tr('Nombre de grupo inválido.','Invalid group name.'));commit(canalesData.map(c=>c.selected?M3U.update(c,{attrs:{'group-title':g},name:c.nombre}):c));}]]);}
+function scopeField(box){return field(box,tr('Alcance','Scope'),'select',[['all',tr('Todos los canales','All channels')],['filtered',tr('Resultados filtrados','Filtered results')],['selected',tr('Selección (todas las páginas)','Selection (all pages)')]]);}
+function scoped(scope){flushFilter();return scope==='selected'?canalesData.filter(c=>c.selected):scope==='filtered'?filtered:canalesData;}
+function replaceDialog(){if(!guard())return;const source=model;const box=panel(tr('Reemplazo literal, distingue mayúsculas y minúsculas. Solo modifica el campo elegido, no las demás directivas.','Literal, case-sensitive replacement. Only changes the chosen field, not other directives.'));const scope=scopeField(box),key=field(box,tr('Campo','Field'),'select',[['name',tr('Nombre','Name')],['url','URL'],['group-title',tr('Grupo','Group')],['tvg-id','TVG-ID'],['tvg-name','TVG-NAME'],['tvg-logo','TVG-LOGO']]);const search=field(box,tr('Buscar','Find'),'input'),replacement=field(box,tr('Reemplazar por','Replace with'),'input');
+ openModal(tr('Buscar y reemplazar','Find and replace'),box,[[tr('Cancelar','Cancel'),'btn-file'],[tr('Vista previa','Preview'),'btn-primary',()=>{if(!sameModel(source))return;if(!search.value)return customAlert(tr('Escribe el texto que quieres buscar.','Enter the text to find.'));const changed=new Map();for(const c of scoped(scope.value)){const k=key.value;const old=k==='name'?c.nombre:k==='url'?c.url:k==='group-title'?c.grupo:M3U.attrs(c.info)[k];if(old===undefined||!old.includes(search.value))continue;const val=old.split(search.value).join(replacement.value);if(old===val)continue;if((k==='name'?/[\r\n\x00-\x1f]/.test(val):!safeField(val))||(k==='url'&&!M3U.urlLine(val))||(['name','group-title'].includes(k)&&!val.trim()))return customAlert(tr('El reemplazo produciría un campo inválido. No se aplicaron cambios.','Replacement would produce an invalid field. No changes applied.'));changed.set(c,k==='name'?M3U.update(c,{name:val}):k==='url'?M3U.update(c,{url:val,name:c.nombre}):M3U.update(c,{attrs:{[k]:val},name:c.nombre}));}if(!changed.size)return notify(tr('Sin coincidencias para cambiar.','No matching changes.'));confirmarAccion(tr(`¿Aplicar el reemplazo a ${changed.size} canales?`,`Apply replacement to ${changed.size} channels?`),()=>{if(sameModel(source))commit(canalesData.map(c=>changed.get(c)||c));});}]]);
+}
+function downloadPlaylist(raw,name){const blob=new Blob([raw],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}
+function exportSubset(){if(!guard())return;const source=model;const box=panel(tr('Exporta solo los canales elegidos, conservando sus directivas y los metadatos globales.','Export only chosen channels, preserving their directives and global metadata.'));const scope=scopeField(box);scope.value=selectedCount?'selected':'filtered';openModal(tr('Exportación selectiva','Selective export'),box,[[tr('Cancelar','Cancel'),'btn-file'],[tr('Exportar','Export'),'btn-primary',()=>{if(!sameModel(source))return;const items=scoped(scope.value);if(!items.length)return notify(tr('No hay canales para exportar.','No channels to export.'));downloadPlaylist(M3U.serialize(model,items),'lista_seleccion.m3u');}]]);}
+function mergePlaylists(raws){const parts=[];let chosen=null;for(const raw of raws){const parsed=M3U.parse(raw);if(parsed.hls||parsed.invalid)throw Error('invalid');const lines=raw.replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n').split('\n');const headers=lines.filter(M3U.header);if(headers.length>1)throw Error('headers');if(headers.length){const h=headers[0].trim();if(!/^#EXTM3U$/i.test(h)){if(chosen!==null&&chosen!==h)throw Error('headers');chosen=h;}}parts.push(lines.filter(l=>!M3U.header(l)).join('\n'));}return (chosen||'#EXTM3U')+'\n'+parts.join('\n');}
+async function importAdvanced(files,append){const ticket=++importTicket,start=textArea.value,base=model;if(append&&!guard())return;try{if(files.reduce((n,f)=>n+f.size,0)+(append?2*start.length:0)>64*1024*1024)throw Error('size');const raws=[];for(const f of files){raws.push(await f.text());if(ticket!==importTicket||textArea.value!==start||model!==base)return notify(tr('Importación cancelada: la lista cambió.','Import cancelled: playlist changed.'));}const raw=!append&&raws.length===1?raws[0]:mergePlaylists(append?[start,...raws]:raws);if(ticket!==importTicket||textArea.value!==start||model!==base)return;remember();textArea.value=raw;procesarLista();notify(tr(`${files.length} archivo(s) importado(s).`,`${files.length} file(s) imported.`));}catch(e){if(ticket!==importTicket||textArea.value!==start||model!==base)return;customAlert(e.message==='headers'?tr('Las cabeceras M3U tienen metadatos incompatibles. Importa por separado para evitar pérdidas.','M3U headers have conflicting metadata. Import separately to avoid loss.'):e.message==='invalid'?tr('No se pueden fusionar listas con bloques inválidos o manifiestos HLS.','Cannot merge invalid playlists or HLS manifests.'):e.message==='size'?tr('La importación supera el límite de 64 MiB.','Import exceeds the 64 MiB limit.'):tr('No se pudieron leer los archivos.','Could not read the files.'));}}
+function chooseImport(files){if(!files.length)return;const start=textArea.value,source=model;const box=panel(tr(`${files.length} archivo(s). Elige reemplazar la lista o añadir los canales a la actual.`,`${files.length} file(s). Replace the playlist or append channels to it.`));const valid=()=>textArea.value===start&&model===source;openModal(tr('Importar archivos','Import files'),box,[[tr('Cancelar','Cancel'),'btn-file'],[tr('Añadir','Append'),'btn-primary',()=>{if(valid())importAdvanced(files,true); }],[tr('Reemplazar','Replace'),'btn-warning',()=>{if(valid())importAdvanced(files,false);}]]);}
+function guard(){if(parseJob){customAlert(tr('Espera a que termine el procesamiento.','Wait for processing to finish.'));return false;}if(textArea.value!==loadedText){customAlert(tr('Pulsa Cargar M3U para aplicar el texto antes de operar.','Load M3U to apply the text before continuing.'));return false;}if(model.hls){customAlert(tr('Esta operación no es válida para manifiestos HLS.','This operation is not valid for HLS manifests.'));return false;}if(model.invalid){customAlert(tr('Hay bloques no reconocidos. Corrígelos en el texto y vuelve a cargar para evitar cambios ambiguos.','Unrecognized blocks exist. Correct the text and reload to avoid ambiguous changes.'));return false;}return true;}
+function resetForm(){['tvgId','tvgLogo','groupTitle','channelName','streamUrl'].forEach(id=>$(id).value='');$('editIndex').value='-1';$('btnGuardar').textContent=i18n[currentLang].t_btn_save;}
+function showParsing(){ $('parseStatus').textContent=tr('Procesando lista…','Processing playlist…'); channelListDiv.setAttribute('aria-busy','true'); }
+function cancelParse(){parseEpoch++;if(parseJob){parseJob.worker?.terminate();clearTimeout(parseJob.timer);parseJob=null;}$('parseStatus').textContent='';channelListDiv.removeAttribute('aria-busy');}
+function applyModel(result,raw){model=result;canalesData=model.channels;loadedText=raw;resetForm();pageIndex=0;selectedCount=0;recount();updateGroups();rebuildFilter();updateNotice();historyUI();saveToLocal();}
+function procesarLista(){
+    cancelTest();cancelParse();const raw=textArea.value;const epoch=parseEpoch;
+    if(raw.length<262144){try{applyModel(M3U.parse(raw),raw);}catch{customAlert(tr('No se pudo procesar la lista. El texto se conserva.','Could not process playlist. Text is preserved.'));}return;}
+    const job={worker:null,timer:null};parseJob=job;showParsing();
+    function finish(result){if(parseEpoch!==epoch||parseJob!==job)return;cancelParse();if(textArea.value!==raw){updateNotice();return;}applyModel(result,raw);}
+    function fallback(){if(parseJob!==job)return;job.worker?.terminate();clearTimeout(job.timer);job.worker=null;job.timer=setTimeout(()=>{if(parseJob!==job)return;try{finish(M3U.parse(raw));}catch{cancelParse();customAlert(tr('No se pudo procesar la lista. El texto se conserva.','Could not process playlist. Text is preserved.'));}},0);}
+    let u;
+    try{const source='const M3U=('+createM3UEngine.toString()+')(); self.onmessage=e=>self.postMessage(M3U.parse(e.data));';u=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));job.worker=new Worker(u);job.worker.onmessage=e=>finish(e.data);job.worker.onerror=e=>{e.preventDefault();fallback();};job.worker.onmessageerror=fallback;job.timer=setTimeout(fallback,30000);job.worker.postMessage(raw);}catch{fallback();}finally{if(u)URL.revokeObjectURL(u);}
+}
+function recount(){counts={Total:canalesData.length,Groups:0,Online:0,Offline:0,Unknown:0,Unchecked:0,Checking:0};const groups=new Set();canalesData.forEach((c,i)=>{c.index=i;c.search=(c.nombre+' '+c.grupo).toLowerCase();groups.add(c.grupo);counts[statKey[c.status]]++;});counts.Groups=groups.size;actualizarStats();}
+function actualizarStats(){clearTimeout(statsTimer);statsTimer=null;Object.entries(counts).forEach(([key,val])=>statNodes[key].forEach(el=>{if(el.textContent!==String(val))el.textContent=val;}));}
+function scheduleStats(){if(statsTimer===null)statsTimer=setTimeout(actualizarStats,80);}
+function setStatus(c,status,detail){if(c.status!==status){counts[statKey[c.status]]--;counts[statKey[status]]++;}c.status=status;c.detail=detail;paintStatus(c);scheduleStats();}
+function paintStatus(c){const v=visibleRows.get(c);if(!v)return;v.dot.className='status-dot status-'+c.status;v.dot.title=statusLabel(c.status)+(c.detail?' · '+c.detail:'');v.dot.setAttribute('aria-label',v.dot.title);v.statusText.textContent=statusLabel(c.status);}
+function pageSize(){return Number($('pageSize').value)||100;}
+function updateSelection(){ $('selectionSummary').textContent=tr(`${selectedCount} seleccionados (todas las páginas)`,`${selectedCount} selected (all pages)`);$('clearSelection').disabled=!selectedCount; }
+function render(){
+    const size=pageSize(),pages=Math.max(1,Math.ceil(filtered.length/size));pageIndex=Math.max(0,Math.min(pageIndex,pages-1));const start=pageIndex*size,end=Math.min(start+size,filtered.length);
+    const f=document.createDocumentFragment();visibleRows.clear();
+    for(let j=start;j<end;j++){const c=filtered[j];
+        const row=document.createElement('div');row.className='channel-item';
+        const dot=document.createElement('span');dot.setAttribute('role','img');
+        const cb=document.createElement('input');cb.type='checkbox';cb.className='chk-canal';cb.checked=c.selected;cb.setAttribute('aria-label',tr('Seleccionar ','Select ')+c.nombre);cb.onchange=()=>{if(c.selected!==cb.checked){selectedCount+=cb.checked?1:-1;c.selected=cb.checked;updateSelection();}};
+        const info=document.createElement('div');info.className='channel-info';const name=document.createElement('strong');name.textContent=c.nombre;name.title=c.nombre;
+        const group=document.createElement('span');group.className='channel-group';group.textContent='📁 '+c.grupo;
+        const statusText=document.createElement('span');statusText.className='channel-status';info.append(name,group,statusText);
+        const edit=document.createElement('button');edit.type='button';edit.className='btn btn-primary';edit.style.padding='5px';edit.textContent='✏️';edit.setAttribute('aria-label',tr('Editar ','Edit ')+c.nombre);edit.onclick=()=>cargarParaEditar(c.index);
+        row.append(dot,cb,info,edit);visibleRows.set(c,{dot,cb,statusText});paintStatus(c);f.append(row);
+    }channelListDiv.replaceChildren(f);channelListDiv.scrollTop=0;
+    $('pageSummary').textContent=tr(`Página ${pageIndex+1}/${pages} · ${filtered.length?start+1:0}–${end} de ${filtered.length}`,`Page ${pageIndex+1}/${pages} · ${filtered.length?start+1:0}–${end} of ${filtered.length}`);
+    $('emptyChannels').textContent=filtered.length?'':canalesData.length?tr('No hay canales que coincidan con el filtro.','No channels match the filter.'):tr('Abre un archivo M3U o pega una lista en el editor de texto.','Open an M3U file or paste a playlist in the text editor.');$('pagePrev').disabled=pageIndex===0;$('pageNext').disabled=pageIndex+1>=pages;updateSelection();
+}
+function rebuildFilter(){clearTimeout(searchTimer);searchTimer=null;const term=$('searchInput').value.toLowerCase(),group=$('groupFilter').value,empty=$('emptyGroupFilter').checked;filtered=term||group||empty?canalesData.filter(c=>(!term||c.search.includes(term))&&(empty?c.grupo==='':!group||c.grupo===group)):canalesData;pageIndex=0;render();renderSidebar();}
+function filtrarCanales(){clearTimeout(searchTimer);searchTimer=setTimeout(rebuildFilter,120);}
+function flushFilter(){if(searchTimer!==null)rebuildFilter();}
+$('groupFilter').oninput=()=>{$('emptyGroupFilter').checked=false;filtrarCanales();};$('emptyGroupFilter').onchange=()=>{if($('emptyGroupFilter').checked)$('groupFilter').value='';rebuildFilter();};$('clearGroupFilter').onclick=()=>{$('groupFilter').value='';$('emptyGroupFilter').checked=false;rebuildFilter();};
+$('pagePrev').onclick=()=>{flushFilter();pageIndex--;render();};$('pageNext').onclick=()=>{flushFilter();pageIndex++;render();};$('pageSize').onchange=()=>{flushFilter();pageIndex=0;render();};
+$('clearSelection').onclick=()=>{canalesData.forEach(c=>c.selected=false);selectedCount=0;render();};
+function commit(channels){cancelTest();remember();textArea.value=M3U.serialize(model,channels);procesarLista();}
+function toggleSeleccionarTodos(){if(!guard())return;flushFilter();const checked=!filtered.every(c=>c.selected);filtered.forEach(c=>{if(c.selected!==checked){selectedCount+=checked?1:-1;c.selected=checked;}});visibleRows.forEach((v,c)=>v.cb.checked=c.selected);updateSelection();}
+
+function safeField(s){return !/["\r\n\x00-\x1f]/.test(s);}
+function cargarParaEditar(i){if(!guard())return;const c=canalesData[i];if(!c)return;const a=M3U.attrs(c.info);$('tvgId').value=a['tvg-id']||'';$('tvgLogo').value=a['tvg-logo']||'';$('groupTitle').value=c.grupo;$('channelName').value=c.nombre;$('streamUrl').value=c.url;$('editIndex').value=i;$('btnGuardar').textContent=i18n[currentLang].t_btn_save_upd;focusEditor();}
+function agregarOEditarCanal(){
+    if(!guard())return;
+    const name=$('channelName').value.trim(),url=$('streamUrl').value.trim(),id=$('tvgId').value.trim(),logo=$('tvgLogo').value.trim(),group=$('groupTitle').value.trim();
+    if(!name||!M3U.urlLine(url)||!safeField(id)||!safeField(logo)||!safeField(group)||/[\r\n\x00-\x1f]/.test(name))return customAlert(tr('Nombre, URL y atributos válidos requeridos. No uses comillas dobles en atributos.','Valid name, URL and attributes required. Do not use double quotes in attributes.'));
+    const i=Number($('editIndex').value), next=canalesData.slice();
+    if(i>=0&&next[i]){const c=next[i],a=M3U.attrs(c.info),changed={};if(id!==(a['tvg-id']||''))changed['tvg-id']=id;if(logo!==(a['tvg-logo']||''))changed['tvg-logo']=logo;if(group!==c.grupo)changed['group-title']=group;next[i]=M3U.update(c,{name,url,attrs:changed});}
+    else {const c=M3U.parse('#EXTINF:-1,'+name+'\n'+url).channels[0];next.push(M3U.update(c,{name,url,attrs:{'tvg-id':id,'tvg-logo':logo||DEFAULT_LOGO,'group-title':group||'General'}}));}
+    commit(next);
+}
+function removerDuplicados(){if(!guard())return;const seen=new Set();const next=canalesData.filter(c=>{if(seen.has(c.url))return false;seen.add(c.url);return true;});const n=canalesData.length-next.length;if(!n)return notify(i18n[currentLang].msg_no_dup);const source=loadedText,sourceModel=model;confirmarAccion(tr(`Eliminar ${n} URL(s) repetidas, conservando la primera entrada? Pueden tener otros atributos.`,`Remove ${n} repeated URL(s), keeping the first entry? Other attributes may differ.`),()=>{if(guard()&&loadedText===source&&sourceModel===model){commit(next);notify(i18n[currentLang].msg_dup_count.replace('{n}',n));}});}
+function ordenarAlfabeticamente(){if(guard()&&canalesData.length>1)commit([...canalesData].sort((a,b)=>a.nombre.localeCompare(b.nombre,currentLang)));}
+function moverVariosAGrupo(){if(!guard()||!canalesData.some(c=>c.selected))return;const group=prompt(tr('Nuevo nombre del grupo:','New group name:'));if(!group||!group.trim())return;if(!safeField(group))return customAlert(tr('Nombre de grupo inválido.','Invalid group name.'));commit(canalesData.map(c=>c.selected?M3U.update(c,{attrs:{'group-title':group.trim()},name:c.nombre}):c));}
+function deleteWhere(predicate,msg){if(!guard())return;const chosen=new Set(canalesData.filter(predicate));if(!chosen.size)return notify(tr('No hay canales para eliminar.','No channels to delete.'));const source=loadedText,chosenModel=model;confirmarAccion(msg.replace('{n}',chosen.size),()=>{if(guard()&&loadedText===source&&chosenModel===model)commit(canalesData.filter(c=>!chosen.has(c)));});}
+function eliminarSeleccionados(){deleteWhere(c=>c.selected,i18n[currentLang].msg_borrar_n);}
+function eliminarOffline(){if(activeTest)return customAlert(tr('Detén o termina la prueba primero.','Stop or finish the test first.'));deleteWhere(c=>c.status==='offline',tr('¿Eliminar {n} canales con HTTP 404/410 comprobado?','Delete {n} channels with confirmed HTTP 404/410?'));}
+function confirmarAccionReset(){confirmarAccion(i18n[currentLang].msg_confirm_reset,()=>{cancelTest();remember();textArea.value='#EXTM3U\n';procesarLista();});}
+function limpiarSintaxis(){if(/^\s*#EXT-X-/im.test(textArea.value))return customAlert(tr('Auto-Fix no modifica manifiestos HLS.','Auto-Fix does not modify HLS manifests.'));let raw=textArea.value.replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');if(!raw.trim())raw='#EXTM3U\n';else if(!raw.split('\n').some(M3U.header))raw='#EXTM3U\n'+raw;remember();textArea.value=raw;procesarLista();notify(tr('Formato normalizado; se conservaron las directivas y líneas no reconocidas.','Format normalized; directives and unrecognized lines preserved.'));}
+function extraerEnlaces(){const raw=textArea.value;if(/^\s*#EXT-X-/im.test(raw))return customAlert(tr('Extracción bloqueada para manifiestos HLS.','Extraction disabled for HLS manifests.'));const links=raw.match(/https?:\/\/[^\s<>"']+/gi)||[];if(!links.length)return notify(tr('No se encontraron URL HTTP(S).','No HTTP(S) URLs found.'));confirmarAccion(tr('Extraer todas las URL del texto (incluye logos y EPG) y reemplazar la lista?','Extract all URLs from the text (including logos and EPG) and replace the playlist?'),()=>{if(textArea.value!==raw)return;remember();textArea.value='#EXTM3U\n'+links.map((l,i)=>`#EXTINF:-1 group-title="${tr('Extraídos','Extracted')}",${tr('Canal','Channel')} ${i+1}\n${l}`).join('\n');procesarLista();});}
+function exportarM3U(){downloadPlaylist(textArea.value,'lista_pro.m3u');}
+async function verificarTodosLosEstados(){
+    if(!guard()||activeTest)return;flushFilter();const items=filtered.slice();if(!items.length)return;
+    const run={controllers:new Set(),cancelled:false};activeTest=run;$('btnCheck').disabled=true;$('btnStop').disabled=false;$('progCont').style.display='block';$('progBar').style.width='0%';$('progCont').setAttribute('aria-valuenow','0');let next=0,done=0;
+    async function worker(){while(!run.cancelled&&next<items.length){const c=items[next++];setStatus(c,'checking','');let status='unknown',detail='';let controller,timer;
+        try{const u=new URL(c.url);if(!['http:','https:'].includes(u.protocol)||u.username||u.password)throw Error('unsupported');controller=new AbortController();run.controllers.add(controller);timer=setTimeout(()=>controller.abort(),8000);const res=await fetch(u.href,{method:'HEAD',mode:'cors',credentials:'omit',redirect:'error',referrerPolicy:'no-referrer',cache:'no-store',signal:controller.signal});if(!res.status||res.type==='opaque')detail='CORS';else{detail='HTTP '+res.status;if(res.ok)status='online';else if(res.status===404||res.status===410)status='offline';}}
+        catch{detail=tr('Red, CORS, redirección, tiempo de espera o protocolo no compatible','Network, CORS, redirect, timeout or unsupported protocol');}
+        finally{clearTimeout(timer);if(controller)run.controllers.delete(controller);}
+        if(run.cancelled||activeTest!==run)return;setStatus(c,status,detail);done++;const p=Math.round(done/items.length*100);$('progBar').style.width=p+'%';$('progCont').setAttribute('aria-valuenow',p);
+    }}
+    try{await Promise.all(Array.from({length:Math.min(6,items.length)},worker));}finally{if(activeTest===run){activeTest=null;actualizarStats();$('btnCheck').disabled=false;$('btnStop').disabled=true;notify(i18n[currentLang].msg_test_fin);}}
+}
+function stopChecking(){cancelTest();actualizarStats();notify(tr('Verificación detenida.','Check stopped.'));}
+$('fileInput').addEventListener('change',e=>{const files=Array.from(e.target.files);e.target.value='';chooseImport(files);});
+textArea.addEventListener('input',()=>{redoStack.length=0;historyUI();cancelTest();cancelParse();actualizarStats();updateNotice();scheduleBackup();});
+$('backupEnabled').addEventListener('change',()=>{const enabled=$('backupEnabled').checked;if(enabled){$('backupEnabled').checked=false;confirmarAccion(tr('El respaldo queda en este navegador y puede incluir contraseñas o tokens. ¿Activar?','Backup stays in this browser and may contain passwords or tokens. Enable?'),()=>{$('backupEnabled').checked=true;if(!storage.set('m3u_backup_enabled','1'))notify(tr('No se pudo guardar la preferencia de respaldo.','Backup preference could not be saved.'));updateBackupLabel();saveToLocal();},()=>{$('backupEnabled').checked=false;updateBackupLabel();});}else{storage.del('m3u_backup_enabled');clearBackup();updateBackupLabel();}});
+window.addEventListener('pagehide',()=>{if($('backupEnabled').checked&&!recovering){clearTimeout(backupTimer);saveToLocal();}});
+Object.assign(i18n.es,{t_http_privacy:"La prueba HTTP contacta los servidores de los canales filtrados; pueden recibir tu IP y la URL solicitada. No comprueba la reproducción."});
+Object.assign(i18n.en,{t_http_privacy:"HTTP testing contacts the filtered channel servers; they may receive your IP and the requested URL. It does not verify playback."});
+setupInterface();
+$('year').textContent=new Date().getFullYear();
+$('backupEnabled').checked=storage.get('m3u_backup_enabled')==='1';cambiarIdioma(currentLang);
+async function restoreBackup(){
+    const legacy=storage.get('m3u_backup');if(!$('backupEnabled').checked&&!legacy)return;
+    recovering=true;$('backupEnabled').disabled=true;const start=textArea.value;let raw=legacy;
+    if(raw===null&&$('backupEnabled').checked){try{raw=await backupDB('readonly',store=>store.get('playlist'));}catch{notify(tr('No se pudo leer IndexedDB.','Could not read IndexedDB.'));}}
+    $('backupEnabled').disabled=false;
+    if(typeof raw!=='string'||!raw.trim()||textArea.value!==start||$('customModal').style.display==='flex'){recovering=false;return;}
+    confirmarAccion(i18n[currentLang].msg_recuperada,()=>{recovering=false;if(textArea.value!==start)return;textArea.value=raw;procesarLista();if(!$('backupEnabled').checked)clearBackup();},()=>{recovering=false;clearBackup();});
+}
+restoreBackup();
 
 function mostrarContacto() {
     const lang = i18n[currentLang];
     
     const contactHTML = `
-        <div style="text-align: left; padding: 10px; color: #eee; font-family: sans-serif;">
-            <form action="https://formspree.io/f/mvzbnaqj" method="POST">
+        <div style="text-align: left; padding: 10px; color: var(--text); font-family: sans-serif;">
+            <p class="privacy-note">${tr("El formulario envía tus datos a Formspree. No incluyas listas, contraseñas ni tokens.","This form sends your data to Formspree. Do not include playlists, passwords or tokens.")}</p><form action="https://formspree.io/f/mvzbnaqj" method="POST">
                 <div style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_name}</label>
-                    <input type="text" name="name" required placeholder="${lang.c_placeholder_name}" 
-                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#0f172a; color:white; box-sizing:border-box;">
+                    <label for="contactName" style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_name}</label>
+                    <input type="text" id="contactName" name="name" required maxlength="120" placeholder="${lang.c_placeholder_name}" 
+                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:var(--input); color:var(--text); box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_email}</label>
-                    <input type="email" name="email" required placeholder="tu@email.com" 
-                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#0f172a; color:white; box-sizing:border-box;">
+                    <label for="contactEmail" style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_email}</label>
+                    <input type="email" id="contactEmail" name="email" required maxlength="254" placeholder="tu@email.com" 
+                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:var(--input); color:var(--text); box-sizing:border-box;">
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_msg}</label>
-                    <textarea name="message" rows="4" required placeholder="${lang.c_placeholder_msg}" 
-                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:#0f172a; color:white; box-sizing:border-box; resize:none;"></textarea>
+                    <label for="contactMessage" style="display:block; margin-bottom:5px; font-size:13px;">${lang.c_msg}</label>
+                    <textarea id="contactMessage" name="message" rows="4" required maxlength="4000" placeholder="${lang.c_placeholder_msg}" 
+                        style="width:100%; padding:10px; border-radius:6px; border:1px solid #334155; background:var(--input); color:var(--text); box-sizing:border-box; resize:none;"></textarea>
                 </div>
-                <button type="submit" class="contact-btn" style="width:100%; background:#8B5CF6; color:white; border:none; padding:12px; border-radius:6px; cursor:pointer; font-weight:bold;">
+                <button type="submit" class="contact-btn" style="width:100%; background:var(--primary); color:var(--on-primary); border:none; padding:12px; border-radius:6px; cursor:pointer; font-weight:bold;">
                     ${lang.c_send}
                 </button>
             </form>
         </div>
     `;
 
-    document.getElementById('modalTitle').innerText = lang.c_title;
-    document.getElementById('modalMsg').innerHTML = contactHTML;
-    document.getElementById('modalActions').innerHTML = `<button class="btn btn-file" onclick="closeModal()">Cerrar / Close</button>`;
-    document.getElementById('customModal').style.display = 'flex';
+    const content=document.createElement('div');content.innerHTML=contactHTML;openModal(lang.c_title,content,[[tr('Cerrar','Close'),'btn-file']]);
 }
-
-    function confirmarAccionReset() {
-        confirmarAccion(i18n[currentLang].msg_confirm_reset, () => limpiarTodo());
-    }
-
-    function customAlert(msg) {
-        const modal = document.getElementById('customModal');
-        document.getElementById('modalMsg').innerText = msg;
-        document.getElementById('modalActions').innerHTML = `<button class="btn btn-primary" onclick="closeModal()">OK</button>`;
-        modal.style.display = 'flex';
-    }
-
-    function closeModal() { document.getElementById('customModal').style.display = 'none'; }
-    
-    function notify(msg) {
-        const t = document.createElement('div');
-        t.className = 'toast'; t.innerText = msg;
-        document.body.appendChild(t);
-        setTimeout(() => t.remove(), 3000);
-    }
-
-    function actualizarStats() {
-        const total = canalesData.length;
-        const grupos = new Set(canalesData.map(c => c.grupo)).size;
-        const online = document.querySelectorAll('.status-online').length;
-        const offline = document.querySelectorAll('.status-offline').length;
-        document.querySelectorAll('.statTotal').forEach(el => el.innerText = total);
-        document.querySelectorAll('.statGroups').forEach(el => el.innerText = grupos);
-        document.querySelectorAll('.statOnline').forEach(el => el.innerText = online);
-        document.querySelectorAll('.statOffline').forEach(el => el.innerText = offline);
-    }
-
-    function agregarOEditarCanal() {
-        const n = document.getElementById('channelName').value.trim();
-        const u = document.getElementById('streamUrl').value.trim();
-        if(!n || !u) return customAlert("Nombre y URL requeridos");
-
-        const id = document.getElementById('tvgId').value.trim();
-        let logo = document.getElementById('tvgLogo').value.trim() || DEFAULT_LOGO;
-        const grp = document.getElementById('groupTitle').value.trim() || "General";
-        const idx = parseInt(document.getElementById('editIndex').value);
-        const info = `#EXTINF:-1 tvg-id="${id}" tvg-logo="${logo}" group-title="${grp}",${n}`;
-        
-        if(idx > -1) canalesData[idx] = {info, url:u, nombre:n, grupo:grp};
-        else canalesData.push({info, url:u, nombre:n, grupo:grp});
-        
-        actualizarTextAreaDesdeData(canalesData);
-        resetForm();
-    }
-
-    function resetForm() {
-        document.getElementById('editIndex').value = "-1";
-        document.getElementById('tvgId').value = "";
-        document.getElementById('tvgLogo').value = "";
-        document.getElementById('channelName').value = "";
-        document.getElementById('streamUrl').value = "";
-        document.getElementById('groupTitle').value = "";
-        document.getElementById('btnGuardar').innerText = i18n[currentLang].t_btn_save;
-    }
-
-    function procesarLista() {
-        const lineas = textArea.value.split('\n');
-        channelListDiv.innerHTML = "";
-        canalesData = [];
-        let indexCont = 0;
-
-        for (let i = 0; i < lineas.length; i++) {
-            let line = lineas[i].trim();
-            if (line.startsWith("#EXTINF")) {
-                let info = line;
-                let url = "";
-                for(let j = i+1; j < lineas.length; j++){
-                    if(lineas[j].trim().startsWith('http')){ url = lineas[j].trim(); i = j; break; }
-                }
-                if (url) {
-                    const nombre = info.split(',').pop().trim() || "Canal";
-                    const gMatch = info.match(/group-title="([^"]*)"/);
-                    const g = gMatch ? gMatch[1] : "General";
-                    canalesData.push({ info, url, nombre, grupo: g });
-
-                    const div = document.createElement('div');
-                    div.className = 'channel-item';
-                    div.id = `canal-${indexCont}`;
-                    div.setAttribute('data-search', (nombre + " " + g).toLowerCase());
-                    div.innerHTML = `
-                        <div class="status-dot" id="dot-${indexCont}"></div>
-                        <input type="checkbox" class="chk-canal" data-index="${indexCont}">
-                        <div class="channel-info"><strong>${nombre}</strong><span class="channel-group">📁 ${g}</span></div>
-                        <button class="btn btn-primary" style="padding:5px" onclick="cargarParaEditar(${indexCont})">✏️</button>
-                    `;
-                    channelListDiv.appendChild(div);
-                    indexCont++;
-                }
-            }
-        }
-        actualizarStats();
-        saveToLocal();
-    }
-
-    function removerDuplicados() {
-        const vistos = new Set();
-        const unicos = canalesData.filter(c => {
-            if (vistos.has(c.url)) return false;
-            vistos.add(c.url);
-            return true;
-        });
-        const borrados = canalesData.length - unicos.length;
-        if(borrados > 0) {
-            actualizarTextAreaDesdeData(unicos);
-            notify(i18n[currentLang].msg_dup_count.replace('{n}', borrados));
-        } else {
-            notify(i18n[currentLang].msg_no_dup);
-        }
-    }
-
-    async function verificarTodosLosEstados() {
-        const vis = Array.from(document.querySelectorAll('.channel-item:not(.hidden)'));
-        if (vis.length === 0) return;
-        const btn = document.getElementById('btnCheck');
-        btn.disabled = true;
-        document.getElementById('progCont').style.display = "block";
-        
-        for (let i = 0; i < vis.length; i += 50) {
-            const lote = vis.slice(i, i + 50);
-            await Promise.all(lote.map(item => {
-                const idx = item.id.split('-')[1];
-                return verificarEstadoSingle(canalesData[idx].url, idx);
-            }));
-            document.getElementById('progBar').style.width = ((i + lote.length) / vis.length * 100) + "%";
-        }
-        btn.disabled = false;
-        setTimeout(() => document.getElementById('progCont').style.display = "none", 2000);
-        notify(i18n[currentLang].msg_test_fin);
-    }
-
-    async function verificarEstadoSingle(url, id) {
-        const dot = document.getElementById(`dot-${id}`);
-        dot.className = "status-dot status-checking";
-        try {
-            const ctrl = new AbortController();
-            const tid = setTimeout(() => ctrl.abort(), 8000);
-            await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: ctrl.signal });
-            clearTimeout(tid);
-            dot.className = "status-dot status-online";
-        } catch { dot.className = "status-dot status-offline"; }
-        actualizarStats();
-    }
-
-    function cargarParaEditar(idx) {
-        const c = canalesData[idx];
-        document.getElementById('tvgId').value = (c.info.match(/tvg-id="([^"]*)"/) || ["",""])[1];
-        const lMatch = (c.info.match(/tvg-logo="([^"]*)"/) || ["",""])[1];
-        document.getElementById('tvgLogo').value = (lMatch === DEFAULT_LOGO) ? "" : lMatch;
-        document.getElementById('groupTitle').value = c.grupo;
-        document.getElementById('channelName').value = c.nombre;
-        document.getElementById('streamUrl').value = c.url;
-        document.getElementById('editIndex').value = idx;
-        document.getElementById('btnGuardar').innerText = i18n[currentLang].t_btn_save_upd;
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
-    function actualizarTextAreaDesdeData(data) {
-        let t = "#EXTM3U\n";
-        data.forEach(c => t += `\n${c.info}\n${c.url}`);
-        textArea.value = t;
-        procesarLista();
-    }
-
-    function extraerEnlaces() {
-        const raw = textArea.value;
-        const links = raw.match(/https?:\/\/[^\s$.?#].[^\s]*/g);
-        if (!links) return;
-        let m3u = "#EXTM3U\n";
-        links.forEach((l, i) => m3u += `\n#EXTINF:-1 tvg-logo="${DEFAULT_LOGO}" group-title="Extraídos",Canal ${i+1}\n${l}`);
-        textArea.value = m3u;
-        procesarLista();
-    }
-
-    function moverVariosAGrupo() {
-        const sel = document.querySelectorAll('.chk-canal:checked');
-        if (sel.length === 0) return;
-        const nGrp = prompt("Nuevo nombre del grupo:");
-        if (!nGrp) return;
-        sel.forEach(c => {
-            const i = c.dataset.index;
-            let inf = canalesData[i].info;
-            if (inf.includes('group-title="')) inf = inf.replace(/group-title="[^"]*"/, `group-title="${nGrp}"`);
-            else inf = inf.replace('#EXTINF:-1', `#EXTINF:-1 group-title="${nGrp}"`);
-            canalesData[i].info = inf;
-            canalesData[i].grupo = nGrp;
-        });
-        actualizarTextAreaDesdeData(canalesData);
-    }
-
-    function ordenarAlfabeticamente() {
-        actualizarTextAreaDesdeData([...canalesData].sort((a,b) => a.nombre.localeCompare(b.nombre)));
-    }
-
-    function filtrarCanales() {
-        const t = document.getElementById('searchInput').value.toLowerCase();
-        document.querySelectorAll('.channel-item').forEach(i => i.classList.toggle('hidden', !i.getAttribute('data-search').includes(t)));
-    }
-
-    function toggleSeleccionarTodos() {
-        const vis = document.querySelectorAll('.channel-item:not(.hidden) .chk-canal');
-        const todos = Array.from(vis).every(c => c.checked);
-        vis.forEach(c => c.checked = !todos);
-    }
-
-    function eliminarSeleccionados() {
-        const sel = document.querySelectorAll('.chk-canal:checked');
-        if (sel.length === 0) return;
-        confirmarAccion(i18n[currentLang].msg_borrar_n.replace('{n}', sel.length), () => {
-            const idxs = Array.from(sel).map(c => parseInt(c.dataset.index));
-            actualizarTextAreaDesdeData(canalesData.filter((_, i) => !idxs.includes(i)));
-        });
-    }
-
-    function eliminarOffline() {
-        const off = document.querySelectorAll('.status-offline');
-        if (off.length === 0) return;
-        confirmarAccion(i18n[currentLang].msg_caidos, () => {
-            const idxs = Array.from(off).map(d => parseInt(d.id.split('-')[1]));
-            actualizarTextAreaDesdeData(canalesData.filter((_, i) => !idxs.includes(i)));
-        });
-    }
-
-    function limpiarSintaxis() {
-        let l = textArea.value.split('\n').filter(x => x.trim() !== "");
-        let res = ["#EXTM3U"];
-        for(let i=0; i<l.length; i++) {
-            if(l[i].startsWith("#EXTINF")) { res.push(l[i]); if(l[i+1]?.startsWith("http")) { res.push(l[i+1]); i++; } }
-        }
-        textArea.value = res.join('\n');
-        procesarLista();
-    }
-
-    function exportarM3U() {
-        const blob = new Blob([textArea.value], {type: 'text/plain'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = "lista_pro.m3u";
-        a.click();
-    }
-
-	function mostrarInfoSitio() {
+function mostrarInfoSitio() {
 		const lang = i18n[currentLang];
 		
 		const infoHTML = `
-			<div style="text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; color: #eee; font-size: 13px;">
+			<div style="text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; color: var(--text); font-size: 13px;">
 				<p>${lang.info_desc}</p>
 				<p><b style="color:var(--primary)">${lang.info_f_title}</b></p>
 				<ul>
@@ -685,40 +661,13 @@ function mostrarContacto() {
 					<li>${lang.info_t_move}</li>
 					<li>${lang.info_t_back}</li>
 				</ul>
-				<p style="font-size: 11px; color: #888; border-top: 1px solid #444; padding-top:10px">${lang.info_version}</p>
+				<p style="font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); padding-top:10px">${lang.info_version}</p>
 			</div>
 		`;
 	
-		const modalTitle = document.getElementById('modalTitle');
-		const modalMsg = document.getElementById('modalMsg');
-		const modalActions = document.getElementById('modalActions');
-		const modal = document.getElementById('customModal');
-	
-		if (modalTitle) modalTitle.innerText = lang.info_guia;
-		if (modalMsg) modalMsg.innerHTML = infoHTML;
-		if (modalActions) modalActions.innerHTML = `<button class="btn btn-primary" onclick="closeModal()">OK</button>`;
-		
-		if (modal) modal.style.display = 'flex';
-	}
+    const content=document.createElement('div');content.innerHTML=infoHTML;openModal(lang.info_guia,content,[['OK','btn-primary']]);
+}
 
-    function limpiarTodo() { textArea.value = "#EXTM3U\n"; procesarLista(); }
-
-document.getElementById('fileInput').addEventListener('change', e => {
-    const file = e.target.files[0];
-    if(!file) return;
-    const r = new FileReader();
-    r.onload = () => { 
-        textArea.value = r.result; 
-        procesarLista(); 
-        const msg = currentLang === 'es' ? "✅ Lista importada correctamente" : "✅ List imported successfully";
-        setTimeout(() => {
-            notify(msg);
-        }, 100);
-    };
-    r.readAsText(file);
-});
 </script>
 </body>
-
 </html>
-
